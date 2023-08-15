@@ -1,0 +1,59 @@
+@use "../utils/typo_var.scss" as var;
+
+.recipes-card {
+  display: flex;
+  flex-direction: column;
+  background: var.$white;
+  box-shadow: 0px 4px 34px 30px #0000000a;
+  border-radius: 21px;
+  width: 100%;
+  & h2 {
+    font-family: var.$ff-anton;
+    font-size: 1.5rem;
+    line-height: 27.1px;
+    margin-bottom: 3rem;
+  }
+  & h3 {
+    text-transform: uppercase;
+    color: var.$grey;
+    font-size: 1rem;
+    margin-bottom: 2rem;
+  }
+  &__img {
+    position: relative;
+    & p {
+      position: absolute;
+      background: var.$yellow;
+      padding: 5px 15px;
+      border-radius: 14px;
+      font-size: 12px;
+      font-weight: 400;
+      right: 2rem;
+      top: 2rem;
+    }
+    & img {
+      border-radius: 21px 21px 0 0;
+      width: 100%;
+      object-fit: cover;
+      height: 18rem;
+    }
+  }
+  &__desc {
+    &__explaination p {
+      margin-bottom: 3rem;
+      line-height: 2rem;
+    }
+    &__ingredients {
+      & .ingredient {
+        font-size: 14px;
+        font-weight: 500;
+        margin-bottom: 0;
+      }
+      & .quantite {
+        font-size: 14px;
+        font-weight: 400;
+        color: var.$grey;
+      }
+    }
+  }
+}

@@ -1,0 +1,38 @@
+@use "../utils/typo_var.scss" as var;
+main {
+  // background: var.$light-grey;
+  // height: 50vh;
+}
+
+.selec {
+  padding: 5rem 0;
+  display: flex;
+  width: 80%;
+  margin: auto;
+
+  &__options {
+    width: 50%;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+  }
+  &__num-recipies {
+    font-family: var.$ff-anton;
+    font-weight: 400;
+    font-size: 21px;
+    line-height: 31.61px;
+    width: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+}
+
+.recipies-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 2.5rem;
+  width: 80%;
+  margin: auto;
+}

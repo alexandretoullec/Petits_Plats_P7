@@ -1,0 +1,7 @@
+@use "../utils/typo_var.scss" as var;
+
+body {
+  font-size: var.$fsp;
+  background: var.$light-grey;
+  font-family: var.$ff-manrope;
+}
