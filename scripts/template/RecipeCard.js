@@ -23,8 +23,8 @@ class recipeCard {
             </div>
             <div class="recipes-card__desc__ingredients">
               <h3>Ingrédients</h3>
-              <div class="row row-cols-2">
-
+              <div class="row row-cols-2 ingredientList">
+                ${this._recipe.ingredient}
                 
                 <div class="ingredient-cont">
                   <p class="ingredient">Lait de coco</p>

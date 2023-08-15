@@ -6,9 +6,6 @@ class Recipe {
     this._time = data.time;
     this._description = data.description;
     this._ingredients = data.ingredients;
-    this._ingredientName = data.ingredients.ingredient;
-    this._ingredientQuantity = data.ingredients.qunatity;
-    this._ingredientUnit = data.ingredients.unit;
   }
 
   get id() {
@@ -34,29 +31,27 @@ class Recipe {
     return this._description;
   }
 
-  get ingredients() {
-    return this._ingredients;
-  }
-
-  get ingredientName() {
-    return this._ingredientName;
-  }
-  get ingredientQuantity() {
-    return this._ingredientQuantity;
-  }
-  get ingredientUnit() {
-    return this._ingredientUnit;
-  }
+  // get ingredients() {
+  //   return this._ingredients;
+  // }
 
   get ingredient() {
-    const $ingredientswrapper = document.createElement("div");
-    $ingredientswrapper.classList.add("ingredient-cont");
+    const ingr = this._ingredients.map(
+      (ingredient) => `
+      <div class="ingredient-cont">
+        <p class="ingredient">${ingredient.ingredient}</p>
+        <p class="quantite">${ingredient.quantity ? ingredient.quantity : ""} ${
+        ingredient.unit ? ingredient.unit : ""
+      }</p>
+      </div>`
+    );
 
-    const ingredient = `    
-      <p class="ingredient">${this._ingredientsName}</p>
-      <p class="quantite">${this._ingredientsQuantity} ${this._ingredientsUnit}</p>    
-    `;
-
-    return ($ingredientswrapper.innerHTML = ingredient);
+    return ingr;
   }
+
+  // get ingr() {
+  //   const arrayIngr = this._ingredients;
+  //   console.log(arrayIngr);
+  //   return arrayIngr.map((i) => i.ingredient);
+  // }
 }
