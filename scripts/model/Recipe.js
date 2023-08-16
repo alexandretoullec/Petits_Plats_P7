@@ -1,5 +1,6 @@
 class Recipe {
   constructor(data) {
+    this._data = data;
     this._id = data.id;
     this._image = data.image;
     this._name = data.name;
@@ -31,9 +32,88 @@ class Recipe {
     return this._description;
   }
 
-  // get ingredients() {
-  //   return this._ingredients;
-  // }
+  get UniqueIngredients() {
+    const allIngredients = [];
+
+    this._data.forEach((recipe) => {
+      recipe.ingredients.forEach((ingredientObj) => {
+        const ingredientName = ingredientObj.ingredient
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .toLowerCase();
+
+        if (ingredientName && !allIngredients.includes(ingredientName)) {
+          allIngredients.push(ingredientName);
+        }
+      });
+    });
+
+    const ingredientCard = allIngredients.map(
+      (ingredient) => `<a>${ingredient}</a>`
+    );
+
+    return ingredientCard.join("");
+  }
+
+  get UniqueAppliance() {
+    const allAppliance = [];
+
+    this._data.forEach((recipe) => {
+      const appliance = recipe.appliance
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase();
+
+      if (appliance && !allAppliance.includes(appliance)) {
+        allAppliance.push(appliance);
+      }
+    });
+
+    const applianceCard = allAppliance.map(
+      (appliance) => `<a>${appliance}</a>`
+    );
+
+    return applianceCard.join("");
+  }
+
+  get UniqueUstensil() {
+    const allUstensils = new Set();
+
+    this._data.forEach((recipe) => {
+      const ustensils = recipe.ustensils;
+
+      if (ustensils) {
+        ustensils.forEach((ustensil) => {
+          allUstensils.add(ustensil);
+        });
+      }
+    });
+
+    const ustensilsCard = Array.from(allUstensils);
+
+    console.log(ustensilsCard);
+
+    const ustensilNoAccent = ustensilsCard.map((ustensil) =>
+      ustensil
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
+    );
+
+    console.log(ustensilNoAccent);
+
+    const ustensilNoDoublon = [];
+
+    ustensilNoAccent.forEach((ingredient) => {
+      if (ingredient && !ustensilNoDoublon.includes(ingredient)) {
+        ustensilNoDoublon.push(ingredient);
+      }
+    });
+
+    const ustensilRes = ustensilNoDoublon.map((u) => `<a>${u}</a>`);
+
+    return ustensilRes.join("");
+  }
 
   get ingredient() {
     const ingr = this._ingredients.map(
