@@ -46,12 +46,6 @@ class Recipe {
       </div>`
     );
 
-    return ingr;
+    return ingr.join(""); // Join the array of HTML strings into a single string
   }
-
-  // get ingr() {
-  //   const arrayIngr = this._ingredients;
-  //   console.log(arrayIngr);
-  //   return arrayIngr.map((i) => i.ingredient);
-  // }
 }

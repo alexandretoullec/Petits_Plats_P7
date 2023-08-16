@@ -24,17 +24,7 @@ class recipeCard {
             <div class="recipes-card__desc__ingredients">
               <h3>Ingrédients</h3>
               <div class="row row-cols-2 ingredientList">
-                ${this._recipe.ingredient}
-                
-                <div class="ingredient-cont">
-                  <p class="ingredient">Lait de coco</p>
-                  <p class="quantite">400 ml</p>
-                </div>
-                <div class="ingredient-cont">
-                  <p class="ingredient">Lait de coco</p>
-                  <p class="quantite">400 ml</p>
-                </div>
-                
+                ${this._recipe.ingredient}    
               </div>
             </div>
           </div>
