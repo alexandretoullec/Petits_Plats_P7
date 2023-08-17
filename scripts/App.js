@@ -1,6 +1,7 @@
 class App {
   constructor() {
     this.$recipiesContainer = document.querySelector(".recipies-container");
+    this.$selectContainer = document.querySelector(".selec__options");
     this.$ingredientListContainer = document.querySelector(
       ".ingredientList-container"
     );
@@ -29,16 +30,20 @@ class App {
     const ingredientArray = new DataFactory(recipes, "ingredient");
     const ustensilArray = new DataFactory(recipes, "ustensil");
     const applianceArray = new DataFactory(recipes, "appliance");
-
+    // console.log(ingredientArray);
     //show the ingredient list
 
-    this.$ingredientListContainer.innerHTML = ingredientArray
+    const listIngredient = ingredientArray
       .map((ingredient) => {
         // console.log(ingredient);
         const template = new MenuCard(ingredient).createListCard();
         return template;
       })
       .join("");
+
+    // console.log(listIngredient);
+
+    this.$ingredientListContainer.innerHTML = listIngredient;
 
     // show the appliance list
 
@@ -56,6 +61,41 @@ class App {
         return template;
       })
       .join("");
+
+    // Ajouter des gestionnaires d'événements de clic à chaque élément
+    const listItems = this.$selectContainer.querySelectorAll(".listItem");
+    listItems.forEach((listItem) => {
+      listItem.addEventListener(
+        "click",
+        this.handleApplianceClick.bind(this, listItem)
+      );
+    });
+  }
+
+  // Méthode de gestion d'événements de clic pour les listes
+  handleApplianceClick(listItem, e) {
+    e.preventDefault();
+
+    const applianceName = listItem.textContent;
+    const tagContainer = document.querySelector(".tag-container");
+    console.log("Appliance cliquée :", applianceName);
+    // Faites ce que vous voulez ici en réponse au clic sur l'élément d'appareil
+    const dom = document.createElement("div");
+    dom.classList.add("tag-card");
+    dom.innerHTML = `        
+            <div class="tag-card__text">${listItem.textContent}</div>
+            <button class="tag-card__closeBtn">
+                <i class="fa-solid fa-xmark"></i>
+            </button>      
+        `;
+    dom
+      .querySelector(".tag-card__closeBtn")
+      .addEventListener(
+        "click",
+        (e) => (e.target.closest(".tag-card").style.display = "none")
+      );
+
+    return tagContainer.append(dom);
   }
 }
 

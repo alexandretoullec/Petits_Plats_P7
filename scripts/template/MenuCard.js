@@ -5,7 +5,7 @@ class MenuCard {
 
   createListCard() {
     const ingredientListCard = `
-            <a href="#">${this._filter}</a>
+            <a class="listItem" href="#">${this._filter}</a>
         `;
 
     return ingredientListCard;
