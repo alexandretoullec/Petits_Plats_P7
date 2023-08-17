@@ -1,3 +1,7 @@
+/**
+ * @param {[]} array
+ */
+
 class Recipe {
   constructor(data) {
     this._data = data;
@@ -36,6 +40,7 @@ class Recipe {
   get UniqueIngredients() {
     this._data.forEach((recipe) => {
       recipe.ingredients.forEach((ingredientObj) => {
+        // replace accent to none
         const ingredientName = ingredientObj.ingredient
           .normalize("NFD")
           .replace(/[\u0300-\u036f]/g, "")
@@ -47,20 +52,7 @@ class Recipe {
       });
     });
 
-    const ingredientCard = this._allIngredients
-      .map((ingredient) => `<a>${ingredient}</a>`)
-      .join("");
-
-    return ingredientCard;
-  }
-
-  renderIngerdientCard() {
-    console.log(this._allIngredients);
-    const card = this._allIngredients.map(
-      (ingredient) => `<a>${ingredient}</a>`
-    );
-
-    return card;
+    return this._allIngredients;
   }
 
   get UniqueAppliance() {

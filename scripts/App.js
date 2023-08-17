@@ -21,16 +21,26 @@ class App {
       this.$recipiesContainer.appendChild(templateCard.createrecipeCard());
     });
 
+    // Call Recipe Object
+
     const templateIngredientList = new Recipe(recipes);
-    this.$ingredientListContainer.innerHTML =
-      templateIngredientList.UniqueIngredients;
-    templateIngredientList.renderIngerdientCard();
+
+    // Call factory pattern allows to change array source according to type
+    const ingredientArray = new DataFactory(recipes, "ingredient");
+
+    this.$ingredientListContainer.innerHTML = ingredientArray
+      .map((ingredient) => {
+        console.log(ingredient);
+        const template = new MenuCard(ingredient).createListCard();
+        return template;
+      })
+      .join("");
 
     this.$applianceListContainer.innerHTML =
       templateIngredientList.UniqueAppliance;
 
-    this.$ustensilsListContainer.innerHTML =
-      templateIngredientList.UniqueUstensil;
+    // this.$ustensilsListContainer.innerHTML =
+    //   templateIngredientList.UniqueUstensil;
   }
 }
 
