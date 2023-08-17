@@ -7,6 +7,7 @@ class Recipe {
     this._time = data.time;
     this._description = data.description;
     this._ingredients = data.ingredients;
+    this._allIngredients = [];
   }
 
   get id() {
@@ -33,8 +34,6 @@ class Recipe {
   }
 
   get UniqueIngredients() {
-    const allIngredients = [];
-
     this._data.forEach((recipe) => {
       recipe.ingredients.forEach((ingredientObj) => {
         const ingredientName = ingredientObj.ingredient
@@ -42,17 +41,26 @@ class Recipe {
           .replace(/[\u0300-\u036f]/g, "")
           .toLowerCase();
 
-        if (ingredientName && !allIngredients.includes(ingredientName)) {
-          allIngredients.push(ingredientName);
+        if (ingredientName && !this._allIngredients.includes(ingredientName)) {
+          this._allIngredients.push(ingredientName);
         }
       });
     });
 
-    const ingredientCard = allIngredients.map(
+    const ingredientCard = this._allIngredients
+      .map((ingredient) => `<a>${ingredient}</a>`)
+      .join("");
+
+    return ingredientCard;
+  }
+
+  renderIngerdientCard() {
+    console.log(this._allIngredients);
+    const card = this._allIngredients.map(
       (ingredient) => `<a>${ingredient}</a>`
     );
 
-    return ingredientCard.join("");
+    return card;
   }
 
   get UniqueAppliance() {
@@ -90,8 +98,6 @@ class Recipe {
     });
 
     const ustensilsCard = Array.from(allUstensils);
-
-    console.log(ustensilsCard);
 
     const ustensilNoAccent = ustensilsCard.map((ustensil) =>
       ustensil

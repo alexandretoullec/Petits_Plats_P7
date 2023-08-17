@@ -1,37 +1,38 @@
-// class App {
-//   constructor(recipes) {
-//     this.$recipiesContainer = document.querySelector(".recipies-container");
-//     this._recipes = recipes;
-//   }
+class App {
+  constructor() {
+    this.$recipiesContainer = document.querySelector(".recipies-container");
+    this.$ingredientListContainer = document.querySelector(
+      ".ingredientList-container"
+    );
+    this.$applianceListContainer = document.querySelector(
+      ".appliance-container"
+    );
+    this.$ustensilsListContainer = document.querySelector(
+      ".ustensils-container"
+    );
+    this._recipes = recipes;
+  }
 
-//   async Main() {
-//     const recipesData = await this._recipes;
-//     // const recipes = recipesData.forEach((recipe) => console.log(recipe.name));
+  async Main() {
+    const recipesRender = this._recipes.map((recipe) => new Recipe(recipe));
+    recipesRender.forEach((recipe) => {
+      const templateCard = new recipeCard(recipe);
 
-//     console.log(recipesData);
-//   }
-// }
+      this.$recipiesContainer.appendChild(templateCard.createrecipeCard());
+    });
 
-// const app = new App();
-// app.Main(recipes);
+    const templateIngredientList = new Recipe(recipes);
+    this.$ingredientListContainer.innerHTML =
+      templateIngredientList.UniqueIngredients;
+    templateIngredientList.renderIngerdientCard();
 
-const $recipiesContainer = document.querySelector(".recipies-container");
-const recipesRender = recipes.map((recipe) => new Recipe(recipe));
+    this.$applianceListContainer.innerHTML =
+      templateIngredientList.UniqueAppliance;
 
-recipesRender.forEach((recipe) => {
-  const templateCard = new recipeCard(recipe);
+    this.$ustensilsListContainer.innerHTML =
+      templateIngredientList.UniqueUstensil;
+  }
+}
 
-  $recipiesContainer.appendChild(templateCard.createrecipeCard());
-});
-
-const $ingredientListContainer = document.querySelector(
-  ".ingredientList-container"
-);
-const templateIngredientList = new Recipe(recipes);
-$ingredientListContainer.innerHTML = templateIngredientList.UniqueIngredients;
-
-const $applianceListContainer = document.querySelector(".appliance-container");
-$applianceListContainer.innerHTML = templateIngredientList.UniqueAppliance;
-
-const $ustensilsListContainer = document.querySelector(".ustensils-container");
-$ustensilsListContainer.innerHTML = templateIngredientList.UniqueUstensil;
+const app = new App();
+app.Main();

@@ -1,0 +1,23 @@
+@use "../utils/typo_var.scss" as var;
+
+.tag-container {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  padding: 2rem 11rem;
+  gap: 2rem;
+}
+
+.tag-card {
+  height: 53px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2rem;
+  border-radius: 10px;
+  background-color: var.$yellow;
+}
+
+.tag-card__closeBtn {
+  background-color: transparent;
+  border: none;
+}
