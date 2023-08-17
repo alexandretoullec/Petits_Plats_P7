@@ -27,20 +27,35 @@ class App {
 
     // Call factory pattern allows to change array source according to type
     const ingredientArray = new DataFactory(recipes, "ingredient");
+    const ustensilArray = new DataFactory(recipes, "ustensil");
+    const applianceArray = new DataFactory(recipes, "appliance");
+
+    //show the ingredient list
 
     this.$ingredientListContainer.innerHTML = ingredientArray
       .map((ingredient) => {
-        console.log(ingredient);
+        // console.log(ingredient);
         const template = new MenuCard(ingredient).createListCard();
         return template;
       })
       .join("");
 
-    this.$applianceListContainer.innerHTML =
-      templateIngredientList.UniqueAppliance;
+    // show the appliance list
 
-    // this.$ustensilsListContainer.innerHTML =
-    //   templateIngredientList.UniqueUstensil;
+    this.$applianceListContainer.innerHTML = applianceArray
+      .map((appliance) => {
+        const template = new MenuCard(appliance).createListCard();
+        return template;
+      })
+      .join("");
+
+    // show the ustensil list
+    this.$ustensilsListContainer.innerHTML = ustensilArray
+      .map((ustensil) => {
+        const template = new MenuCard(ustensil).createListCard();
+        return template;
+      })
+      .join("");
   }
 }
 

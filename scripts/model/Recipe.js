@@ -69,14 +69,15 @@ class Recipe {
       }
     });
 
-    const applianceCard = allAppliance.map(
-      (appliance) => `<a>${appliance}</a>`
-    );
+    // const applianceCard = allAppliance.map(
+    //   (appliance) => `<a>${appliance}</a>`
+    // );
 
-    return applianceCard.join("");
+    return allAppliance;
   }
 
   get UniqueUstensil() {
+    // new set allow to avoid doublons
     const allUstensils = new Set();
 
     this._data.forEach((recipe) => {
@@ -98,8 +99,6 @@ class Recipe {
         .toLowerCase()
     );
 
-    console.log(ustensilNoAccent);
-
     const ustensilNoDoublon = [];
 
     ustensilNoAccent.forEach((ingredient) => {
@@ -108,9 +107,7 @@ class Recipe {
       }
     });
 
-    const ustensilRes = ustensilNoDoublon.map((u) => `<a>${u}</a>`);
-
-    return ustensilRes.join("");
+    return ustensilNoDoublon;
   }
 
   get ingredient() {
