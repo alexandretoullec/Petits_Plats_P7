@@ -12,6 +12,7 @@ class App {
       ".ustensils-container"
     );
     this._recipes = recipes;
+    this.tagArraySearch = [];
   }
 
   async Main() {
@@ -67,33 +68,72 @@ class App {
     listItems.forEach((listItem) => {
       listItem.addEventListener(
         "click",
-        this.handleApplianceClick.bind(this, listItem)
+        this.handleListClick.bind(this, listItem)
       );
     });
+
+    // add event qui ajoute dans le tableau tag l'élément cliqué
+    document.querySelectorAll(".dropdown-content").forEach((tag) => {
+      tag.addEventListener("click", (e) => {
+        const tagValue = e.target.textContent;
+        console.log(tagValue);
+        this.tagArraySearch.push(tagValue);
+        console.log(this.tagArraySearch);
+      });
+    });
+
+    // filter threw recipes with this.tagArraySearch
+    const filteredRecipes = recipes.filter((recipe) => {
+      const ingredients = recipe.ingredients.map(
+        (ingredient) => ingredient.ingredient
+      );
+      const appliances = [recipe.appliance];
+      const ustensils = recipe.ustensils;
+
+      // Remplacez le tableau ci-dessus par votre propre liste de filtrage
+
+      const filterList = [...ingredients, ...appliances, ...ustensils];
+      console.log(filterList);
+      return filterList.some((filterItem) =>
+        this.tagArraySearch.includes(filterItem)
+      );
+    });
+
+    console.log(filteredRecipes);
   }
 
   // Méthode de gestion d'événements de clic pour les listes
-  handleApplianceClick(listItem, e) {
+  handleListClick(listItem, e) {
     e.preventDefault();
 
-    const applianceName = listItem.textContent;
+    const listName = listItem.textContent;
     const tagContainer = document.querySelector(".tag-container");
-    console.log("Appliance cliquée :", applianceName);
+    // console.log("Appliance cliquée :", listName);
     // Faites ce que vous voulez ici en réponse au clic sur l'élément d'appareil
     const dom = document.createElement("div");
     dom.classList.add("tag-card");
+    //create tag
     dom.innerHTML = `        
             <div class="tag-card__text">${listItem.textContent}</div>
             <button class="tag-card__closeBtn">
                 <i class="fa-solid fa-xmark"></i>
             </button>      
         `;
-    dom
-      .querySelector(".tag-card__closeBtn")
-      .addEventListener(
-        "click",
-        (e) => (e.target.closest(".tag-card").style.display = "none")
-      );
+
+    //remove card from dom and from tagArraySearch
+    dom.querySelector(".tag-card__closeBtn").addEventListener("click", (e) => {
+      const tagCard = e.target.closest(".tag-card");
+      if (tagCard) {
+        const tagText = tagCard.querySelector(".tag-card__text").textContent;
+        const index = this.tagArraySearch.indexOf(tagText);
+        if (index !== -1) {
+          this.tagArraySearch.splice(index, 1);
+        }
+
+        e.target.closest(".tag-card").remove();
+        console.log(this.tagArraySearch);
+      }
+    });
 
     return tagContainer.append(dom);
   }
