@@ -15,9 +15,16 @@ class App {
     this.tagArraySearch = [];
     this.filteredRecipes = [];
     this.recipesRenderAll = this._recipes.map((recipe) => new Recipe(recipe));
+
+    this.recipesRender = "";
+
+    //using factory pattern to change the type of datas
+    this.ingredientArray = new DataFactory(recipes, "ingredient");
+    this.ustensilArray = new DataFactory(recipes, "ustensil");
+    this.applianceArray = new DataFactory(recipes, "appliance");
   }
 
-  updateFilteredRecipes() {
+  async updateFilteredRecipes() {
     this.filteredRecipes = recipes.filter((recipe) => {
       const ingredients = recipe.ingredients.map(
         (ingredient) => ingredient.ingredient
@@ -41,15 +48,41 @@ class App {
 
     this.$recipiesContainer.innerHTML = "";
 
-    let recipesRender = "";
     console.log(this.tagArraySearch);
     // tag différent de vide alors filtre
     if (this.tagArraySearch.length === 0) {
       this.showRecipe(this.recipesRenderAll);
     } else {
-      recipesRender = this.filteredRecipes.map((recipe) => new Recipe(recipe));
-      this.showRecipe(recipesRender);
+      this.recipesRender = this.filteredRecipes.map(
+        (recipe) => new Recipe(recipe)
+      );
+      this.showRecipe(this.recipesRender);
+      console.log(this.recipesRender);
     }
+
+    this.filteredLists(this.filteredRecipes);
+  }
+
+  filteredLists(filteredRecipes) {
+    const filteredIngredients = new DataFactory(filteredRecipes, "ingredient");
+    const filteredAppliances = new DataFactory(filteredRecipes, "appliance");
+    const filteredUstensils = new DataFactory(recipes, "ustensil");
+
+    // Mettre à jour les propriétés ingredientArray, applianceArray et ustensilArray avec les nouvelles valeurs filtrées
+    this.ingredientArray = Array.from(filteredIngredients);
+    this.applianceArray = Array.from(filteredAppliances);
+    this.ustensilArray = Array.from(filteredUstensils);
+
+    // Mettre à jour les listes d'affichage dans le DOM
+    this.$ingredientListContainer.innerHTML = this.renderList(
+      this.ingredientArray
+    );
+    this.$applianceListContainer.innerHTML = this.renderList(
+      this.applianceArray
+    );
+    this.$ustensilsListContainer.innerHTML = this.renderList(
+      this.ustensilArray
+    );
   }
 
   showRecipe(data) {
@@ -60,46 +93,38 @@ class App {
     });
   }
 
+  renderList(items) {
+    return items
+      .map((item) => {
+        // console.log(ingredient);
+        const template = new MenuCard(item).createListCard();
+        return template;
+      })
+      .join("");
+  }
+
   async Main() {
     this.showRecipe(this.recipesRenderAll);
 
     // Call Recipe Object
 
     // Call factory pattern allows to change array source according to type
-    const ingredientArray = new DataFactory(recipes, "ingredient");
-    const ustensilArray = new DataFactory(recipes, "ustensil");
-    const applianceArray = new DataFactory(recipes, "appliance");
-    // console.log(ingredientArray);
+
     //show the ingredient list
-
-    const listIngredient = ingredientArray
-      .map((ingredient) => {
-        // console.log(ingredient);
-        const template = new MenuCard(ingredient).createListCard();
-        return template;
-      })
-      .join("");
-
-    // console.log(listIngredient);
-
-    this.$ingredientListContainer.innerHTML = listIngredient;
+    this.$ingredientListContainer.innerHTML = this.renderList(
+      this.ingredientArray
+    );
 
     // show the appliance list
 
-    this.$applianceListContainer.innerHTML = applianceArray
-      .map((appliance) => {
-        const template = new MenuCard(appliance).createListCard();
-        return template;
-      })
-      .join("");
+    this.$applianceListContainer.innerHTML = this.renderList(
+      this.applianceArray
+    );
 
     // show the ustensil list
-    this.$ustensilsListContainer.innerHTML = ustensilArray
-      .map((ustensil) => {
-        const template = new MenuCard(ustensil).createListCard();
-        return template;
-      })
-      .join("");
+    this.$ustensilsListContainer.innerHTML = this.renderList(
+      this.ustensilArray
+    );
 
     // Ajouter des gestionnaires d'événements de clic à chaque élément
     const listItems = this.$selectContainer.querySelectorAll(".listItem");
@@ -119,10 +144,13 @@ class App {
     document.querySelectorAll(".dropdown-content").forEach((tag) => {
       tag.addEventListener("click", (e) => {
         const tagValue = e.target.textContent;
-        this.tagArraySearch.push(tagValue);
-        // console.log(this.tagArraySearch);
+
+        if (tagValue) {
+          this.tagArraySearch.push(tagValue);
+        }
         this.updateFilteredRecipes();
-        console.log(this.filteredRecipes);
+
+        console.log(this.tagArraySearch);
       });
     });
   }
@@ -131,10 +159,10 @@ class App {
   handleListClick(listItem, e) {
     e.preventDefault();
 
-    const listName = listItem.textContent;
+    // const listName = listItem.textContent;
     const tagContainer = document.querySelector(".tag-container");
     // console.log("Appliance cliquée :", listName);
-    // Faites ce que vous voulez ici en réponse au clic sur l'élément d'appareil
+
     const dom = document.createElement("div");
     dom.classList.add("tag-card");
     //create tag

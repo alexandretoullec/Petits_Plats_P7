@@ -64,50 +64,34 @@ class Recipe {
         .replace(/[\u0300-\u036f]/g, "")
         .toLowerCase();
 
+      //evite les doublons
       if (appliance && !allAppliance.includes(appliance)) {
         allAppliance.push(appliance);
       }
     });
 
-    // const applianceCard = allAppliance.map(
-    //   (appliance) => `<a>${appliance}</a>`
-    // );
-
     return allAppliance;
   }
 
   get UniqueUstensil() {
-    // new set allow to avoid doublons
+    //autre méthode pour enlever les doublons
     const allUstensils = new Set();
 
     this._data.forEach((recipe) => {
       const ustensils = recipe.ustensils;
-
       if (ustensils) {
         ustensils.forEach((ustensil) => {
-          allUstensils.add(ustensil);
+          allUstensils.add(
+            ustensil
+              .normalize("NFD")
+              .replace(/[\u0300-\u036f]/g, "")
+              .toLowerCase()
+          );
         });
       }
     });
 
-    const ustensilsCard = Array.from(allUstensils);
-
-    const ustensilNoAccent = ustensilsCard.map((ustensil) =>
-      ustensil
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .toLowerCase()
-    );
-
-    const ustensilNoDoublon = [];
-
-    ustensilNoAccent.forEach((ingredient) => {
-      if (ingredient && !ustensilNoDoublon.includes(ingredient)) {
-        ustensilNoDoublon.push(ingredient);
-      }
-    });
-
-    return ustensilNoDoublon;
+    return Array.from(allUstensils);
   }
 
   get ingredient() {
