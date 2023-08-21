@@ -58,15 +58,22 @@ class App {
       );
       this.showRecipe(this.recipesRender);
       console.log(this.recipesRender);
+      this.filteredLists(this.filteredRecipes);
     }
 
-    this.filteredLists(this.filteredRecipes);
+    const listItems = this.$selectContainer.querySelectorAll(".listItem");
+    listItems.forEach((listItem) => {
+      listItem.addEventListener(
+        "click",
+        this.handleListClick.bind(this, listItem)
+      );
+    });
   }
 
-  filteredLists(filteredRecipes) {
+  async filteredLists(filteredRecipes) {
     const filteredIngredients = new DataFactory(filteredRecipes, "ingredient");
     const filteredAppliances = new DataFactory(filteredRecipes, "appliance");
-    const filteredUstensils = new DataFactory(recipes, "ustensil");
+    const filteredUstensils = new DataFactory(filteredRecipes, "ustensil");
 
     // Mettre à jour les propriétés ingredientArray, applianceArray et ustensilArray avec les nouvelles valeurs filtrées
     this.ingredientArray = Array.from(filteredIngredients);
