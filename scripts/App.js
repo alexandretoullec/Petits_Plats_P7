@@ -13,19 +13,57 @@ class App {
     );
     this._recipes = recipes;
     this.tagArraySearch = [];
+    this.filteredRecipes = [];
+    this.recipesRenderAll = this._recipes.map((recipe) => new Recipe(recipe));
   }
 
-  async Main() {
-    const recipesRender = this._recipes.map((recipe) => new Recipe(recipe));
-    recipesRender.forEach((recipe) => {
+  updateFilteredRecipes() {
+    this.filteredRecipes = recipes.filter((recipe) => {
+      const ingredients = recipe.ingredients.map(
+        (ingredient) => ingredient.ingredient
+      );
+      const appliances = [recipe.appliance];
+      const ustensils = recipe.ustensils;
+
+      const filterList = [...ingredients, ...appliances, ...ustensils];
+
+      const lowercaseFilterList = filterList.map((item) =>
+        item
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .toLowerCase()
+      );
+
+      return this.tagArraySearch.every((tag) =>
+        lowercaseFilterList.includes(tag)
+      );
+    });
+
+    this.$recipiesContainer.innerHTML = "";
+
+    let recipesRender = "";
+    console.log(this.tagArraySearch);
+    // tag différent de vide alors filtre
+    if (this.tagArraySearch.length === 0) {
+      this.showRecipe(this.recipesRenderAll);
+    } else {
+      recipesRender = this.filteredRecipes.map((recipe) => new Recipe(recipe));
+      this.showRecipe(recipesRender);
+    }
+  }
+
+  showRecipe(data) {
+    data.forEach((recipe) => {
       const templateCard = new recipeCard(recipe);
 
       this.$recipiesContainer.appendChild(templateCard.createrecipeCard());
     });
+  }
+
+  async Main() {
+    this.showRecipe(this.recipesRenderAll);
 
     // Call Recipe Object
-
-    const templateIngredientList = new Recipe(recipes);
 
     // Call factory pattern allows to change array source according to type
     const ingredientArray = new DataFactory(recipes, "ingredient");
@@ -72,34 +110,21 @@ class App {
       );
     });
 
+    /**********************************************
+     *
+     *
+     *   */
+
     // add event qui ajoute dans le tableau tag l'élément cliqué
     document.querySelectorAll(".dropdown-content").forEach((tag) => {
       tag.addEventListener("click", (e) => {
         const tagValue = e.target.textContent;
-        console.log(tagValue);
         this.tagArraySearch.push(tagValue);
-        console.log(this.tagArraySearch);
+        // console.log(this.tagArraySearch);
+        this.updateFilteredRecipes();
+        console.log(this.filteredRecipes);
       });
     });
-
-    // filter threw recipes with this.tagArraySearch
-    const filteredRecipes = recipes.filter((recipe) => {
-      const ingredients = recipe.ingredients.map(
-        (ingredient) => ingredient.ingredient
-      );
-      const appliances = [recipe.appliance];
-      const ustensils = recipe.ustensils;
-
-      // Remplacez le tableau ci-dessus par votre propre liste de filtrage
-
-      const filterList = [...ingredients, ...appliances, ...ustensils];
-      console.log(filterList);
-      return filterList.some((filterItem) =>
-        this.tagArraySearch.includes(filterItem)
-      );
-    });
-
-    console.log(filteredRecipes);
   }
 
   // Méthode de gestion d'événements de clic pour les listes
@@ -131,7 +156,9 @@ class App {
         }
 
         e.target.closest(".tag-card").remove();
-        console.log(this.tagArraySearch);
+        // console.log(this.tagArraySearch);
+        this.updateFilteredRecipes();
+        console.log(this.filteredRecipes);
       }
     });
 
