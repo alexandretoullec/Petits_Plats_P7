@@ -18,10 +18,48 @@ class App {
 
     this.recipesRender = "";
 
+    //dom pour algorithme de recherche
+    this.searchInput = document.querySelector(".form-control");
+
+    // ecouter l'événement input
+    this.searchInput.addEventListener(
+      "input",
+      this.handleSearchInput.bind(this)
+    );
+
     //using factory pattern to change the type of datas
     this.ingredientArray = new DataFactory(recipes, "ingredient");
     this.ustensilArray = new DataFactory(recipes, "ustensil");
     this.applianceArray = new DataFactory(recipes, "appliance");
+  }
+
+  handleSearchInput(event) {
+    const searchTerm = event.target.value.trim(); // Obtenir le terme de recherche sans espaces inutiles
+
+    if (searchTerm.length >= 3) {
+      this.searchRecipes(searchTerm);
+    } else {
+      this.resetSearch();
+    }
+  }
+
+  searchRecipes(searchTerm) {
+    this.filteredRecipes = this._recipes.filter((recipe) => {
+      // console.log(recipe.name.toLowerCase().includes(searchTerm.toLowerCase()));
+      const recipeName = recipe.name.toLowerCase();
+
+      return recipeName.includes(searchTerm.toLowerCase());
+    });
+
+    this.$recipiesContainer.innerHTML = "";
+    this.showRecipe(this.filteredRecipes);
+    // this.filteredLists(this.filteredRecipes);
+  }
+
+  resetSearch() {
+    this.$recipiesContainer.innerHTML = "";
+    this.showRecipe(this.recipesRenderAll);
+    this.filteredLists(this.recipesRenderAll);
   }
 
   async updateFilteredRecipes() {
@@ -52,6 +90,7 @@ class App {
     // tag différent de vide alors filtre
     if (this.tagArraySearch.length === 0) {
       this.showRecipe(this.recipesRenderAll);
+      this.filteredLists(this._recipes);
     } else {
       this.recipesRender = this.filteredRecipes.map(
         (recipe) => new Recipe(recipe)
@@ -60,7 +99,6 @@ class App {
       console.log(this.recipesRender);
       this.filteredLists(this.filteredRecipes);
     }
-
     const listItems = this.$selectContainer.querySelectorAll(".listItem");
     listItems.forEach((listItem) => {
       listItem.addEventListener(
