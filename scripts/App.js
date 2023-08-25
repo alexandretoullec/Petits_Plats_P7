@@ -16,7 +16,7 @@ class App {
     this.tagArraySearch = [];
     this.filteredRecipes = [];
     this.recipesRenderAll = this._recipes.map((recipe) => new Recipe(recipe));
-
+    this._allIngredients = [];
     this.recipesRender = "";
 
     //dom pour algorithme de recherche
@@ -38,17 +38,18 @@ class App {
     const searchTerm = event.target.value.trim(); // Obtenir le terme de recherche sans espaces inutiles
 
     if (searchTerm.length <= 3) {
-      this.resetSearch();
       this.$recipiesContainer.innerHTML = "";
+
       this.showRecipe(this.recipesRenderAll);
-      // this.filteredLists(this.recipesRenderAll);
-      return;
+      this.filteredLists(this.recipesRenderAll);
+
+      // return;
     } else {
       this.$recipiesContainer.innerHTML = "";
-      this.searchRecipes2(searchTerm);
+      this.searchRecipes(searchTerm);
       this.showRecipe(this.filteredRecipes);
-      this.$numRecipies.innerHTML = `${this.filteredRecipes.length} recettes`;
-      // this.filteredLists(this.filteredRecipes);
+      // this.$numRecipies.innerHTML = `${this.filteredRecipes.length} recettes`;
+      this.filteredLists(this.filteredRecipes);
     }
   }
 
@@ -63,33 +64,29 @@ class App {
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "")
         .toLowerCase();
-      const ingredients = this._recipes.reduce((allIngredients, recipe) => {
-        recipe.ingredients.forEach((ingredientObj) => {
-          const ingredientName = ingredientObj.ingredient
-            .normalize("NFD")
-            .replace(/[\u0300-\u036f]/g, "")
-            .toLowerCase();
 
-          if (ingredientName && !allIngredients.includes(ingredientName)) {
-            allIngredients.push(ingredientName);
-          }
-        });
+      const allIngredients = []; // Array to hold all ingredient names
 
-        return allIngredients;
-      }, []);
+      // Collect all ingredient names from all recipes
 
-      // const filteredIngredients = new DataFactory(recipe, "ingredient");
-      // const ingredients = Array.from(filteredIngredients);
-      console.log(lowerSearchTerm);
-      // console.log(recipeName);
-      console.log(ingredients);
-      console.log(recipeDescription);
+      recipe.ingredients.forEach((ingredientObj) => {
+        const ingredientName = ingredientObj.ingredient
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .toLowerCase();
+        if (!allIngredients.includes(ingredientName)) {
+          allIngredients.push(ingredientName);
+        }
+      });
+
+      // Now check if the search term is in any of the collected ingredient names
       return (
         recipeName.includes(lowerSearchTerm) ||
         recipeDescription.includes(lowerSearchTerm) ||
-        ingredients.includes(lowerSearchTerm)
+        allIngredients.includes(lowerSearchTerm)
       );
     });
+
     if (this.filteredRecipes.length === 0) {
       return (this.$recipiesContainer.innerHTML = `« Aucune recette ne contient ${searchTerm} vous pouvez chercher «
       tarte aux pommes », « poisson », etc.`);
@@ -129,8 +126,6 @@ class App {
       this.showRecipe(this.filteredRecipes);
     }
   }
-
-  resetSearch() {}
 
   async updateFilteredRecipes() {
     this.filteredRecipes = recipes.filter((recipe) => {
@@ -188,7 +183,7 @@ class App {
     const applianceArray = Array.from(filteredAppliances);
     const ustensilArray = Array.from(filteredUstensils);
 
-    console.log(this.ingredientArray);
+    // console.log(this.ingredientArray);
 
     // Mettre à jour les listes d'affichage dans le DOM
     this.$ingredientListContainer.innerHTML = this.renderList(ingredientArray);
@@ -299,7 +294,7 @@ class App {
         e.target.closest(".tag-card").remove();
         // console.log(this.tagArraySearch);
         this.updateFilteredRecipes();
-        console.log(this.filteredRecipes);
+        // console.log(this.filteredRecipes);
       }
     });
 

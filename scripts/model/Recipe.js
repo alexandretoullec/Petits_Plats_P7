@@ -37,6 +37,10 @@ class Recipe {
     return this._description;
   }
 
+  get ingredients() {
+    return this._ingredients;
+  }
+
   get UniqueIngredients() {
     this._data.forEach((recipe) => {
       recipe.ingredients.forEach((ingredientObj) => {
