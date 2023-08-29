@@ -39,7 +39,7 @@ class App {
 
     if (searchTerm.length >= 3) {
       this.$recipiesContainer.innerHTML = "";
-      this.filteredLists(this.filteredRecipes);
+      // this.filteredLists(this.filteredRecipes);
       this.searchRecipes(searchTerm);
 
       console.log(this.filteredRecipes);
@@ -50,7 +50,7 @@ class App {
       console.log(this.filteredRecipes);
       this.showRecipe(this.recipesRenderAll);
       console.log(this.recipesRenderAll);
-      this.filteredLists(this.recipesRenderAll);
+      // this.filteredLists(this.recipesRenderAll);
     }
   }
 
@@ -135,7 +135,7 @@ class App {
   //   });
   // }
 
-  async searchRecipes(searchTerm) {
+  searchRecipes(searchTerm) {
     const lowerSearchTerm = searchTerm
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "")
@@ -212,15 +212,15 @@ class App {
     // console.log(this.tagArraySearch);
     // tag différent de vide alors filtre
     if (this.tagArraySearch.length === 0) {
-      this.showRecipe(this.recipesRenderAll);
       this.filteredLists(this._recipes);
+      this.showRecipe(this.recipesRenderAll);
     } else {
       this.recipesRender = this.filteredRecipes.map(
         (recipe) => new Recipe(recipe)
       );
+      this.filteredLists(this.filteredRecipes);
       this.showRecipe(this.recipesRender);
       // console.log(this.recipesRender);
-      this.filteredLists(this.filteredRecipes);
     }
     const listItems = this.$selectContainer.querySelectorAll(".listItem");
     listItems.forEach((listItem) => {
@@ -293,6 +293,14 @@ class App {
     this.$ingredientListContainer.innerHTML = this.renderList(ingredientArray);
     this.$applianceListContainer.innerHTML = this.renderList(applianceArray);
     this.$ustensilsListContainer.innerHTML = this.renderList(ustensilArray);
+
+    // const listItems = this.$selectContainer.querySelectorAll(".listItem");
+    // listItems.forEach((listItem) => {
+    //   listItem.addEventListener(
+    //     "click",
+    //     this.handleListClick.bind(this, listItem)
+    //   );
+    // });
   }
 
   showRecipe(data) {
