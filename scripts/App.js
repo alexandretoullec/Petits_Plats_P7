@@ -41,7 +41,7 @@ class App {
       this.$recipiesContainer.innerHTML = "";
       // this.filteredLists(this.filteredRecipes);
       this.searchRecipes(searchTerm);
-
+      this.showRecipe(this.filteredRecipes);
       console.log(this.filteredRecipes);
 
       // return;
@@ -54,136 +54,136 @@ class App {
     }
   }
 
+  searchRecipes(searchTerm) {
+    this.filteredRecipes = this.recipesRenderAll.filter((recipe) => {
+      const lowerSearchTerm = searchTerm
+        .toLowerCase()
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase();
+
+      const recipeName = recipe.name
+        ? recipe.name
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .toLowerCase()
+        : "";
+
+      const recipeDescription = recipe.description
+        ? recipe.description
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .toLowerCase()
+        : "";
+
+      const allIngredients = []; // Array to hold all ingredient names
+
+      if (recipe.ingredients) {
+        recipe.ingredients.forEach((ingredientObj) => {
+          const ingredientName = ingredientObj.ingredient
+            ? ingredientObj.ingredient
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .toLowerCase()
+            : "";
+
+          if (ingredientName && !allIngredients.includes(ingredientName)) {
+            allIngredients.push(ingredientName);
+          }
+        });
+      }
+
+      const allUstensils = new Set();
+
+      if (recipe.ustensils) {
+        recipe.ustensils.forEach((ustensil) => {
+          const normalizedUstensil = ustensil
+            ? ustensil
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .toLowerCase()
+            : "";
+
+          if (normalizedUstensil) {
+            allUstensils.add(normalizedUstensil);
+          }
+        });
+      }
+
+      const allAppliance = new Set();
+
+      if (recipe.appliance) {
+        const normalizedAppliance = recipe.appliance
+          ? recipe.appliance
+              .normalize("NFD")
+              .replace(/[\u0300-\u036f]/g, "")
+              .toLowerCase()
+          : "";
+
+        if (normalizedAppliance) {
+          allAppliance.add(normalizedAppliance);
+        }
+      }
+
+      // Now check if the search term is in any of the collected properties
+      return (
+        recipeName.includes(lowerSearchTerm) ||
+        recipeDescription.includes(lowerSearchTerm) ||
+        allIngredients.includes(lowerSearchTerm) ||
+        Array.from(allUstensils).includes(lowerSearchTerm) ||
+        Array.from(allAppliance).includes(lowerSearchTerm)
+      );
+    });
+  }
+
   // searchRecipes(searchTerm) {
-  //   this.filteredRecipes = this.recipesRenderAll.filter((recipe) => {
-  //     const lowerSearchTerm = searchTerm
-  //       .toLowerCase()
+  //   const lowerSearchTerm = searchTerm
+  //     .normalize("NFD")
+  //     .replace(/[\u0300-\u036f]/g, "")
+  //     .toLowerCase();
+
+  //   this.filteredRecipes = [];
+
+  //   for (let i = 0; i < this.recipesRenderAll.length; i++) {
+  //     const recipe = this.recipesRenderAll[i];
+  //     const recipeName = recipe.name
+  //       .normalize("NFD")
   //       .replace(/[\u0300-\u036f]/g, "")
   //       .toLowerCase();
-
-  //     const recipeName = recipe.name
-  //       ? recipe.name
-  //           .normalize("NFD")
-  //           .replace(/[\u0300-\u036f]/g, "")
-  //           .toLowerCase()
-  //       : "";
-
   //     const recipeDescription = recipe.description
-  //       ? recipe.description
-  //           .normalize("NFD")
-  //           .replace(/[\u0300-\u036f]/g, "")
-  //           .toLowerCase()
-  //       : "";
+  //       .normalize("NFD")
+  //       .replace(/[\u0300-\u036f]/g, "")
+  //       .toLowerCase();
+  //     let foundInIngredients = false;
 
-  //     const allIngredients = []; // Array to hold all ingredient names
-
-  //     if (recipe.ingredients) {
-  //       recipe.ingredients.forEach((ingredientObj) => {
-  //         const ingredientName = ingredientObj.ingredient
-  //           ? ingredientObj.ingredient
-  //               .normalize("NFD")
-  //               .replace(/[\u0300-\u036f]/g, "")
-  //               .toLowerCase()
-  //           : "";
-
-  //         if (ingredientName && !allIngredients.includes(ingredientName)) {
-  //           allIngredients.push(ingredientName);
-  //         }
-  //       });
-  //     }
-
-  //     const allUstensils = new Set();
-
-  //     if (recipe.ustensils) {
-  //       recipe.ustensils.forEach((ustensil) => {
-  //         const normalizedUstensil = ustensil
-  //           ? ustensil
-  //               .normalize("NFD")
-  //               .replace(/[\u0300-\u036f]/g, "")
-  //               .toLowerCase()
-  //           : "";
-
-  //         if (normalizedUstensil) {
-  //           allUstensils.add(normalizedUstensil);
-  //         }
-  //       });
-  //     }
-
-  //     const allAppliance = new Set();
-
-  //     if (recipe.appliance) {
-  //       const normalizedAppliance = recipe.appliance
-  //         ? recipe.appliance
-  //             .normalize("NFD")
-  //             .replace(/[\u0300-\u036f]/g, "")
-  //             .toLowerCase()
-  //         : "";
-
-  //       if (normalizedAppliance) {
-  //         allAppliance.add(normalizedAppliance);
+  //     for (let j = 0; j < recipe.ingredients.length; j++) {
+  //       const ingredientName = recipe.ingredients[j].ingredient
+  //         .normalize("NFD")
+  //         .replace(/[\u0300-\u036f]/g, "")
+  //         .toLowerCase();
+  //       if (ingredientName.includes(lowerSearchTerm)) {
+  //         foundInIngredients = true;
+  //         break;
   //       }
   //     }
 
-  //     // Now check if the search term is in any of the collected properties
-  //     return (
+  //     if (
   //       recipeName.includes(lowerSearchTerm) ||
   //       recipeDescription.includes(lowerSearchTerm) ||
-  //       allIngredients.includes(lowerSearchTerm) ||
-  //       Array.from(allUstensils).includes(lowerSearchTerm) ||
-  //       Array.from(allAppliance).includes(lowerSearchTerm)
-  //     );
-  //   });
+  //       foundInIngredients
+  //     ) {
+  //       // Vérifiez si la recette n'est pas déjà dans le tableau filteredRecipes
+  //       if (!this.filteredRecipes.includes(recipe)) {
+  //         this.filteredRecipes.push(recipe);
+  //       }
+  //     }
+  //   }
+
+  //   if (this.filteredRecipes.length === 0) {
+  //     this.$recipiesContainer.innerHTML = `Aucune recette ne contient "${searchTerm}".`;
+  //   } else {
+  //     this.showRecipe(this.filteredRecipes);
+  //   }
   // }
-
-  searchRecipes(searchTerm) {
-    const lowerSearchTerm = searchTerm
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .toLowerCase();
-
-    this.filteredRecipes = [];
-
-    for (let i = 0; i < this.recipesRenderAll.length; i++) {
-      const recipe = this.recipesRenderAll[i];
-      const recipeName = recipe.name
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .toLowerCase();
-      const recipeDescription = recipe.description
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .toLowerCase();
-      let foundInIngredients = false;
-
-      for (let j = 0; j < recipe.ingredients.length; j++) {
-        const ingredientName = recipe.ingredients[j].ingredient
-          .normalize("NFD")
-          .replace(/[\u0300-\u036f]/g, "")
-          .toLowerCase();
-        if (ingredientName.includes(lowerSearchTerm)) {
-          foundInIngredients = true;
-          break;
-        }
-      }
-
-      if (
-        recipeName.includes(lowerSearchTerm) ||
-        recipeDescription.includes(lowerSearchTerm) ||
-        foundInIngredients
-      ) {
-        // Vérifiez si la recette n'est pas déjà dans le tableau filteredRecipes
-        if (!this.filteredRecipes.includes(recipe)) {
-          this.filteredRecipes.push(recipe);
-        }
-      }
-    }
-
-    if (this.filteredRecipes.length === 0) {
-      this.$recipiesContainer.innerHTML = `Aucune recette ne contient "${searchTerm}".`;
-    } else {
-      this.showRecipe(this.filteredRecipes);
-    }
-  }
 
   async updateFilteredRecipes() {
     this.filteredRecipes = recipes.filter((recipe) => {
