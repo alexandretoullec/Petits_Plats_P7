@@ -11,7 +11,9 @@ class Recipe {
     this._time = data.time;
     this._description = data.description;
     this._ingredients = data.ingredients;
+    this._ustensils = data.ustensils;
     this._allIngredients = [];
+    this._appliance = data.appliance;
   }
 
   get id() {
@@ -41,6 +43,14 @@ class Recipe {
     return this._ingredients;
   }
 
+  get appliance() {
+    return this._appliance;
+  }
+
+  get ustensils() {
+    return this._ustensils;
+  }
+
   get UniqueIngredients() {
     this._data.forEach((recipe) => {
       recipe.ingredients.forEach((ingredientObj) => {
@@ -60,7 +70,7 @@ class Recipe {
   }
 
   get UniqueAppliance() {
-    const allAppliance = [];
+    this._allAppliances = new Set();
 
     this._data.forEach((recipe) => {
       const appliance = recipe.appliance
@@ -68,13 +78,10 @@ class Recipe {
         .replace(/[\u0300-\u036f]/g, "")
         .toLowerCase();
 
-      //evite les doublons
-      if (appliance && !allAppliance.includes(appliance)) {
-        allAppliance.push(appliance);
-      }
+      this._allAppliances.add(appliance);
     });
 
-    return allAppliance;
+    return Array.from(this._allAppliances);
   }
 
   get UniqueUstensil() {
