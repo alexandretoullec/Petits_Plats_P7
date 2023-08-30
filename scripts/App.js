@@ -39,7 +39,7 @@ class App {
 
     if (searchTerm.length >= 3) {
       this.$recipiesContainer.innerHTML = "";
-      // this.filteredLists(this.filteredRecipes);
+      this.filteredLists(this.filteredRecipes);
       this.searchRecipes(searchTerm);
       this.showRecipe(this.filteredRecipes);
       console.log(this.filteredRecipes);
@@ -50,7 +50,7 @@ class App {
       console.log(this.filteredRecipes);
       this.showRecipe(this.recipesRenderAll);
       console.log(this.recipesRenderAll);
-      // this.filteredLists(this.recipesRenderAll);
+      this.filteredLists(this.recipesRenderAll);
     }
   }
 
@@ -92,45 +92,49 @@ class App {
         });
       }
 
-      const allUstensils = new Set();
+      // const allUstensils = new Set();
 
-      if (recipe.ustensils) {
-        recipe.ustensils.forEach((ustensil) => {
-          const normalizedUstensil = ustensil
-            ? ustensil
-                .normalize("NFD")
-                .replace(/[\u0300-\u036f]/g, "")
-                .toLowerCase()
-            : "";
+      // if (recipe.ustensils) {
+      //   recipe.ustensils.forEach((ustensil) => {
+      //     const normalizedUstensil = ustensil
+      //       ? ustensil
+      //           .normalize("NFD")
+      //           .replace(/[\u0300-\u036f]/g, "")
+      //           .toLowerCase()
+      //       : "";
 
-          if (normalizedUstensil) {
-            allUstensils.add(normalizedUstensil);
-          }
-        });
+      //     if (normalizedUstensil) {
+      //       allUstensils.add(normalizedUstensil);
+      //     }
+      //   });
+      // }
+
+      // const allAppliance = new Set();
+
+      // if (recipe.appliance) {
+      //   const normalizedAppliance = recipe.appliance
+      //     ? recipe.appliance
+      //         .normalize("NFD")
+      //         .replace(/[\u0300-\u036f]/g, "")
+      //         .toLowerCase()
+      //     : "";
+
+      //   if (normalizedAppliance) {
+      //     allAppliance.add(normalizedAppliance);
+      //   }
+      // }
+      if (this.filteredRecipes.length === 0) {
+        this.$recipiesContainer.innerHTML = `Aucune recette ne contient "${searchTerm}".`;
+      } else {
+        this.showRecipe(this.filteredRecipes);
       }
 
-      const allAppliance = new Set();
-
-      if (recipe.appliance) {
-        const normalizedAppliance = recipe.appliance
-          ? recipe.appliance
-              .normalize("NFD")
-              .replace(/[\u0300-\u036f]/g, "")
-              .toLowerCase()
-          : "";
-
-        if (normalizedAppliance) {
-          allAppliance.add(normalizedAppliance);
-        }
-      }
-
-      // Now check if the search term is in any of the collected properties
       return (
         recipeName.includes(lowerSearchTerm) ||
         recipeDescription.includes(lowerSearchTerm) ||
-        allIngredients.includes(lowerSearchTerm) ||
-        Array.from(allUstensils).includes(lowerSearchTerm) ||
-        Array.from(allAppliance).includes(lowerSearchTerm)
+        allIngredients.includes(lowerSearchTerm)
+        // Array.from(allUstensils).includes(lowerSearchTerm) ||
+        // Array.from(allAppliance).includes(lowerSearchTerm)
       );
     });
   }
@@ -212,7 +216,13 @@ class App {
     // console.log(this.tagArraySearch);
     // tag différent de vide alors filtre
     if (this.tagArraySearch.length === 0) {
+      // const searchTerm = this.searchInput.value.trim();
+      // console.log(typeof searchTerm);
+      // this.filteredRecipes = this.searchRecipes(searchTerm);
       this.filteredLists(this._recipes);
+      // this.handleSearchInput(event);
+      console.log(this.filteredRecipes);
+      // this.showRecipe(this.filteredRecipes);
       this.showRecipe(this.recipesRenderAll);
     } else {
       this.recipesRender = this.filteredRecipes.map(
@@ -222,13 +232,13 @@ class App {
       this.showRecipe(this.recipesRender);
       // console.log(this.recipesRender);
     }
-    const listItems = this.$selectContainer.querySelectorAll(".listItem");
-    listItems.forEach((listItem) => {
-      listItem.addEventListener(
-        "click",
-        this.handleListClick.bind(this, listItem)
-      );
-    });
+    // const listItems = this.$selectContainer.querySelectorAll(".listItem");
+    // listItems.forEach((listItem) => {
+    //   listItem.addEventListener(
+    //     "click",
+    //     this.handleListClick.bind(this, listItem)
+    //   );
+    // });
   }
 
   // filteredLists(filteredRecipes) {
@@ -294,13 +304,13 @@ class App {
     this.$applianceListContainer.innerHTML = this.renderList(applianceArray);
     this.$ustensilsListContainer.innerHTML = this.renderList(ustensilArray);
 
-    // const listItems = this.$selectContainer.querySelectorAll(".listItem");
-    // listItems.forEach((listItem) => {
-    //   listItem.addEventListener(
-    //     "click",
-    //     this.handleListClick.bind(this, listItem)
-    //   );
-    // });
+    const listItems = this.$selectContainer.querySelectorAll(".listItem");
+    listItems.forEach((listItem) => {
+      listItem.addEventListener(
+        "click",
+        this.handleListClick.bind(this, listItem)
+      );
+    });
   }
 
   showRecipe(data) {
@@ -313,6 +323,14 @@ class App {
   }
 
   renderList(items) {
+    // const listItems = this.$selectContainer.querySelectorAll(".listItem");
+    // listItems.forEach((listItem) => {
+    //   listItem.addEventListener(
+    //     "click",
+    //     this.handleListClick.bind(this, listItem)
+    //   );
+    // });
+
     return items
       .map((item) => {
         // console.log(ingredient);
@@ -407,6 +425,7 @@ class App {
         e.target.closest(".tag-card").remove();
         // console.log(this.tagArraySearch);
         this.updateFilteredRecipes();
+
         // console.log(this.filteredRecipes);
       }
     });
