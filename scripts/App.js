@@ -17,14 +17,14 @@ class App {
     this.filteredRecipes = [];
     this.recipesRenderAll = this._recipes.map((recipe) => new Recipe(recipe));
     this._allIngredients = [];
-    this.recipesRender = "";
+    this.recipesRender = [];
 
     //dom pour algorithme de recherche
     this.searchInput = document.querySelector(".form-control");
 
     // ecouter l'événement input
     this.searchInput.addEventListener(
-      "keyup",
+      "input",
       this.handleSearchInput.bind(this)
     );
 
@@ -40,22 +40,22 @@ class App {
     if (searchTerm.length >= 3) {
       this.$recipiesContainer.innerHTML = "";
       this.filteredLists(this.filteredRecipes);
-      this.searchRecipes(searchTerm);
+      this.searchRecipes(searchTerm, this.recipesRender);
       this.showRecipe(this.filteredRecipes);
       console.log(this.filteredRecipes);
 
       // return;
     } else {
       this.$recipiesContainer.innerHTML = "";
-      // console.log(this.filteredRecipes);
+      this.searchRecipes(searchTerm, this.recipesRenderAll);
       this.showRecipe(this.recipesRenderAll);
       // console.log(this.recipesRenderAll);
       this.filteredLists(this.recipesRenderAll);
     }
   }
 
-  searchRecipes(searchTerm) {
-    this.filteredRecipes = this.recipesRenderAll.filter((recipe) => {
+  searchRecipes(searchTerm, filteredRecipes) {
+    this.filteredRecipes = filteredRecipes.filter((recipe) => {
       const lowerSearchTerm = searchTerm
         .toLowerCase()
         .replace(/[\u0300-\u036f]/g, "")
@@ -131,13 +131,8 @@ class App {
     // console.log(this.tagArraySearch);
     // tag différent de vide alors filtre
     if (this.tagArraySearch.length === 0) {
-      // const searchTerm = this.searchInput.value.trim();
-      // console.log(searchTerm);
-      // this.filteredRecipes = this.searchRecipes(searchTerm);
       this.filteredLists(this._recipes);
-      // this.handleSearchInput(event);
-      console.log(this.filteredRecipes);
-      // this.showRecipe(this.filteredRecipes);
+
       this.showRecipe(this.recipesRenderAll);
     } else {
       this.recipesRender = this.filteredRecipes.map(
@@ -145,7 +140,7 @@ class App {
       );
       this.filteredLists(this.filteredRecipes);
       this.showRecipe(this.recipesRender);
-      // console.log(this.recipesRender);
+      console.log(this.recipesRender);
     }
   }
 
