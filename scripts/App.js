@@ -24,7 +24,7 @@ class App {
 
     // ecouter l'événement input
     this.searchInput.addEventListener(
-      "input",
+      "keyup",
       this.handleSearchInput.bind(this)
     );
 
@@ -92,37 +92,6 @@ class App {
         });
       }
 
-      // const allUstensils = new Set();
-
-      // if (recipe.ustensils) {
-      //   recipe.ustensils.forEach((ustensil) => {
-      //     const normalizedUstensil = ustensil
-      //       ? ustensil
-      //           .normalize("NFD")
-      //           .replace(/[\u0300-\u036f]/g, "")
-      //           .toLowerCase()
-      //       : "";
-
-      //     if (normalizedUstensil) {
-      //       allUstensils.add(normalizedUstensil);
-      //     }
-      //   });
-      // }
-
-      // const allAppliance = new Set();
-
-      // if (recipe.appliance) {
-      //   const normalizedAppliance = recipe.appliance
-      //     ? recipe.appliance
-      //         .normalize("NFD")
-      //         .replace(/[\u0300-\u036f]/g, "")
-      //         .toLowerCase()
-      //     : "";
-
-      //   if (normalizedAppliance) {
-      //     allAppliance.add(normalizedAppliance);
-      //   }
-      // }
       if (this.filteredRecipes.length === 0) {
         this.$recipiesContainer.innerHTML = `Aucune recette ne contient "${searchTerm}".`;
       }
@@ -131,8 +100,6 @@ class App {
         recipeName.includes(lowerSearchTerm) ||
         recipeDescription.includes(lowerSearchTerm) ||
         allIngredients.includes(lowerSearchTerm)
-        // Array.from(allUstensils).includes(lowerSearchTerm) ||
-        // Array.from(allAppliance).includes(lowerSearchTerm)
       );
     });
   }
@@ -165,7 +132,7 @@ class App {
     // tag différent de vide alors filtre
     if (this.tagArraySearch.length === 0) {
       // const searchTerm = this.searchInput.value.trim();
-      // console.log(typeof searchTerm);
+      // console.log(searchTerm);
       // this.filteredRecipes = this.searchRecipes(searchTerm);
       this.filteredLists(this._recipes);
       // this.handleSearchInput(event);
@@ -180,13 +147,6 @@ class App {
       this.showRecipe(this.recipesRender);
       // console.log(this.recipesRender);
     }
-    // const listItems = this.$selectContainer.querySelectorAll(".listItem");
-    // listItems.forEach((listItem) => {
-    //   listItem.addEventListener(
-    //     "click",
-    //     this.handleListClick.bind(this, listItem)
-    //   );
-    // });
   }
 
   filteredLists(filteredRecipes) {

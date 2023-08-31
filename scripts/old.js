@@ -1,4 +1,4 @@
-// searchRecipes(searchTerm) {
+// function searchRecipes(searchTerm) {
 //   const lowerSearchTerm = searchTerm
 //     .normalize("NFD")
 //     .replace(/[\u0300-\u036f]/g, "")
@@ -39,7 +39,7 @@
 //         this.filteredRecipes.push(recipe);
 //       }
 //     }
-//   }
+//   }}
 
 //   if (this.filteredRecipes.length === 0) {
 //     this.$recipiesContainer.innerHTML = `Aucune recette ne contient "${searchTerm}".`;
@@ -65,3 +65,38 @@
 //   this.$applianceListContainer.innerHTML = this.renderList(applianceArray);
 //   this.$ustensilsListContainer.innerHTML = this.renderList(ustensilArray);
 // }
+
+// const allUstensils = new Set();
+
+// if (recipe.ustensils) {
+//   recipe.ustensils.forEach((ustensil) => {
+//     const normalizedUstensil = ustensil
+//       ? ustensil
+//           .normalize("NFD")
+//           .replace(/[\u0300-\u036f]/g, "")
+//           .toLowerCase()
+//       : "";
+
+//     if (normalizedUstensil) {
+//       allUstensils.add(normalizedUstensil);
+//     }
+//   });
+// }
+
+// const allAppliance = new Set();
+
+// if (recipe.appliance) {
+//   const normalizedAppliance = recipe.appliance
+//     ? recipe.appliance
+//         .normalize("NFD")
+//         .replace(/[\u0300-\u036f]/g, "")
+//         .toLowerCase()
+//     : "";
+
+//   if (normalizedAppliance) {
+//     allAppliance.add(normalizedAppliance);
+//   }
+// }
+
+// Array.from(allUstensils).includes(lowerSearchTerm) ||
+// Array.from(allAppliance).includes(lowerSearchTerm)
