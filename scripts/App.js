@@ -41,11 +41,11 @@ class App {
       this.$recipiesContainer.innerHTML = "";
 
       this.filteredLists(this.filteredRecipes);
-      console.log(this.recipesRender);
+      // console.log(this.recipesRender);
       this.searchRecipes(searchTerm, this.recipesRender);
 
       this.showRecipe(this.filteredRecipes);
-      console.log(this.filteredRecipes);
+      // console.log(this.filteredRecipes);
 
       // return;
     } else {
@@ -301,6 +301,7 @@ class App {
         // console.log(this.filteredRecipes);
         if (this.tagArraySearch.length === 0) {
           console.log("je suis la");
+          this.$recipiesContainer.innerHTML = "";
 
           this.searchRecipes(searchTerm, this.recipesRender);
 
