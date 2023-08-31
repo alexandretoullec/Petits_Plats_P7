@@ -39,8 +39,11 @@ class App {
 
     if (searchTerm.length >= 3) {
       this.$recipiesContainer.innerHTML = "";
+
       this.filteredLists(this.filteredRecipes);
+      console.log(this.recipesRender);
       this.searchRecipes(searchTerm, this.recipesRender);
+
       this.showRecipe(this.filteredRecipes);
       console.log(this.filteredRecipes);
 
@@ -130,18 +133,13 @@ class App {
 
     // console.log(this.tagArraySearch);
     // tag différent de vide alors filtre
-    if (this.tagArraySearch.length === 0) {
-      this.filteredLists(this._recipes);
 
-      this.showRecipe(this.recipesRenderAll);
-    } else {
-      this.recipesRender = this.filteredRecipes.map(
-        (recipe) => new Recipe(recipe)
-      );
-      this.filteredLists(this.filteredRecipes);
-      this.showRecipe(this.recipesRender);
-      console.log(this.recipesRender);
-    }
+    this.recipesRender = this.filteredRecipes.map(
+      (recipe) => new Recipe(recipe)
+    );
+    this.filteredLists(this.filteredRecipes);
+    this.showRecipe(this.recipesRender);
+    console.log(this.filteredRecipes);
   }
 
   filteredLists(filteredRecipes) {
@@ -218,9 +216,9 @@ class App {
   }
 
   async Main() {
-    this.showRecipe(this.recipesRenderAll);
+    // this.showRecipe(this.recipesRenderAll);
     console.log(this.recipesRenderAll);
-
+    this.updateFilteredRecipes();
     //show the ingredient list
     this.$ingredientListContainer.innerHTML = this.renderList(
       this.ingredientArray
