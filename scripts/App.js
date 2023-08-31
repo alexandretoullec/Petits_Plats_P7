@@ -34,8 +34,8 @@ class App {
     this.applianceArray = new DataFactory(recipes, "appliance");
   }
 
-  handleSearchInput(event) {
-    const searchTerm = event.target.value.trim(); // Obtenir le terme de recherche sans espaces inutiles
+  async handleSearchInput(event) {
+    const searchTerm = await event.target.value.trim(); // Obtenir le terme de recherche sans espaces inutiles
 
     if (searchTerm.length >= 3) {
       this.$recipiesContainer.innerHTML = "";
@@ -139,7 +139,8 @@ class App {
     );
     this.filteredLists(this.filteredRecipes);
     this.showRecipe(this.recipesRender);
-    console.log(this.filteredRecipes);
+    console.log(this.recipesRender[0]);
+    console.log(this.filteredRecipes[0]);
   }
 
   filteredLists(filteredRecipes) {
@@ -217,7 +218,7 @@ class App {
 
   async Main() {
     // this.showRecipe(this.recipesRenderAll);
-    console.log(this.recipesRenderAll);
+    // console.log(this.recipesRenderAll);
     this.updateFilteredRecipes();
     //show the ingredient list
     this.$ingredientListContainer.innerHTML = this.renderList(
@@ -257,6 +258,7 @@ class App {
         if (tagValue) {
           this.tagArraySearch.push(tagValue);
         }
+
         this.updateFilteredRecipes();
 
         // console.log(this.tagArraySearch);
@@ -295,10 +297,19 @@ class App {
         e.target.closest(".tag-card").remove();
         // console.log(this.tagArraySearch);
         this.updateFilteredRecipes();
-
+        console.log(tagArraySearch);
         // console.log(this.filteredRecipes);
+        if (this.tagArraySearch.length === 0) {
+          console.log("je suis la");
+
+          this.searchRecipes(searchTerm, this.recipesRender);
+
+          this.showRecipe(this.filteredRecipes);
+        }
       }
     });
+
+    const searchTerm = this.searchInput.value.trim();
 
     return tagContainer.append(dom);
   }
