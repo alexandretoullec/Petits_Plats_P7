@@ -1,20 +1,4 @@
-// function selectElement() {
-//   const selectElement = document.querySelector(".selected");
-//   selectElement.setAttribute("aria-expanded", false);
-//   const options = document.querySelector(".options");
-
-//   selectElement.addEventListener("click", () => {
-//     document.querySelector(".fa-chevron-down").classList.toggle("chevron-up");
-//     let ariaExpanded = selectElement.getAttribute("aria-expanded");
-//     ariaExpanded == "true" ? (ariaExpanded = "false") : (ariaExpanded = "true");
-//     selectElement.setAttribute("aria-expanded", ariaExpanded);
-//     options.classList.toggle("hidden");
-//   });
-// }
-
-// selectElement();
-
-// Fonction fléchée pour gérer l'affichage/masquage des menus déroulants
+// mange lists
 document.querySelectorAll(".dropbtn").forEach((dropbtn) => {
   dropbtn.addEventListener("click", () => {
     const dropdownContent = dropbtn.nextElementSibling;

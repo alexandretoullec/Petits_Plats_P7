@@ -1,5 +1,5 @@
 /**
- * @param {[]} array
+ * @param {Array} datas
  */
 
 class Recipe {

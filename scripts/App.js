@@ -1,5 +1,6 @@
 class App {
   constructor() {
+    // Selecting DOM elements
     this.$recipiesContainer = document.querySelector(".recipies-container");
     this.$selectContainer = document.querySelector(".selec__options");
     this.$ingredientListContainer = document.querySelector(
@@ -17,9 +18,8 @@ class App {
     this.filteredRecipes = [];
     this.recipesRenderAll = this._recipes.map((recipe) => new Recipe(recipe));
     this._allIngredients = [];
-    this.recipesRender = "";
 
-    //dom pour algorithme de recherche
+    // Event listener for the search bar
     this.searchInput = document.querySelector(".form-control");
 
     // ecouter l'événement input
@@ -28,165 +28,98 @@ class App {
       this.handleSearchInput.bind(this)
     );
 
-    //using factory pattern to change the type of datas
+    // Using the Factory pattern to change data types
     this.ingredientArray = new DataFactory(recipes, "ingredient");
     this.ustensilArray = new DataFactory(recipes, "ustensil");
     this.applianceArray = new DataFactory(recipes, "appliance");
   }
 
-  handleSearchInput(event) {
-    const searchTerm = event.target.value.trim(); // Obtenir le terme de recherche sans espaces inutiles
+  /**
+   * Event handler function for input in the search bar.
+   * @param {Event} event - The event object representing the input event.
+   */
+  async handleSearchInput(event) {
+    const searchTerm = await event.target.value.trim(); // Obtenir le terme de recherche sans espaces inutiles
 
     if (searchTerm.length >= 3) {
       this.$recipiesContainer.innerHTML = "";
-      // this.filteredLists(this.filteredRecipes);
-      this.searchRecipes(searchTerm);
-
-      console.log(this.filteredRecipes);
+      this.filteredLists(this.filteredRecipes);
+      this.searchRecipes(searchTerm, this.filteredRecipes);
+      this.showRecipe(this.filteredRecipes);
 
       // return;
     } else {
       this.$recipiesContainer.innerHTML = "";
-      console.log(this.filteredRecipes);
+      this.searchRecipes(searchTerm, this.recipesRenderAll);
       this.showRecipe(this.recipesRenderAll);
-      console.log(this.recipesRenderAll);
-      // this.filteredLists(this.recipesRenderAll);
+
+      this.filteredLists(this.recipesRenderAll);
     }
   }
 
-  // searchRecipes(searchTerm) {
-  //   this.filteredRecipes = this.recipesRenderAll.filter((recipe) => {
-  //     const lowerSearchTerm = searchTerm
-  //       .toLowerCase()
-  //       .replace(/[\u0300-\u036f]/g, "")
-  //       .toLowerCase();
+  /**
+   * Function to search for recipes based on the search term.
+   * @param {string} searchTerm - The search term entered by the user.
+   * @param {Array} filteredRecipes - The list of filtered recipes.
+   */
 
-  //     const recipeName = recipe.name
-  //       ? recipe.name
-  //           .normalize("NFD")
-  //           .replace(/[\u0300-\u036f]/g, "")
-  //           .toLowerCase()
-  //       : "";
+  searchRecipes(searchTerm, filteredRecipes) {
+    this.filteredRecipes = filteredRecipes.filter((recipe) => {
+      const lowerSearchTerm = searchTerm
+        .toLowerCase()
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase();
 
-  //     const recipeDescription = recipe.description
-  //       ? recipe.description
-  //           .normalize("NFD")
-  //           .replace(/[\u0300-\u036f]/g, "")
-  //           .toLowerCase()
-  //       : "";
-
-  //     const allIngredients = []; // Array to hold all ingredient names
-
-  //     if (recipe.ingredients) {
-  //       recipe.ingredients.forEach((ingredientObj) => {
-  //         const ingredientName = ingredientObj.ingredient
-  //           ? ingredientObj.ingredient
-  //               .normalize("NFD")
-  //               .replace(/[\u0300-\u036f]/g, "")
-  //               .toLowerCase()
-  //           : "";
-
-  //         if (ingredientName && !allIngredients.includes(ingredientName)) {
-  //           allIngredients.push(ingredientName);
-  //         }
-  //       });
-  //     }
-
-  //     const allUstensils = new Set();
-
-  //     if (recipe.ustensils) {
-  //       recipe.ustensils.forEach((ustensil) => {
-  //         const normalizedUstensil = ustensil
-  //           ? ustensil
-  //               .normalize("NFD")
-  //               .replace(/[\u0300-\u036f]/g, "")
-  //               .toLowerCase()
-  //           : "";
-
-  //         if (normalizedUstensil) {
-  //           allUstensils.add(normalizedUstensil);
-  //         }
-  //       });
-  //     }
-
-  //     const allAppliance = new Set();
-
-  //     if (recipe.appliance) {
-  //       const normalizedAppliance = recipe.appliance
-  //         ? recipe.appliance
-  //             .normalize("NFD")
-  //             .replace(/[\u0300-\u036f]/g, "")
-  //             .toLowerCase()
-  //         : "";
-
-  //       if (normalizedAppliance) {
-  //         allAppliance.add(normalizedAppliance);
-  //       }
-  //     }
-
-  //     // Now check if the search term is in any of the collected properties
-  //     return (
-  //       recipeName.includes(lowerSearchTerm) ||
-  //       recipeDescription.includes(lowerSearchTerm) ||
-  //       allIngredients.includes(lowerSearchTerm) ||
-  //       Array.from(allUstensils).includes(lowerSearchTerm) ||
-  //       Array.from(allAppliance).includes(lowerSearchTerm)
-  //     );
-  //   });
-  // }
-
-  searchRecipes(searchTerm) {
-    const lowerSearchTerm = searchTerm
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .toLowerCase();
-
-    this.filteredRecipes = [];
-
-    for (let i = 0; i < this.recipesRenderAll.length; i++) {
-      const recipe = this.recipesRenderAll[i];
       const recipeName = recipe.name
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .toLowerCase();
-      const recipeDescription = recipe.description
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .toLowerCase();
-      let foundInIngredients = false;
+        ? recipe.name
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .toLowerCase()
+        : "";
 
-      for (let j = 0; j < recipe.ingredients.length; j++) {
-        const ingredientName = recipe.ingredients[j].ingredient
-          .normalize("NFD")
-          .replace(/[\u0300-\u036f]/g, "")
-          .toLowerCase();
-        if (ingredientName.includes(lowerSearchTerm)) {
-          foundInIngredients = true;
-          break;
-        }
+      const recipeDescription = recipe.description
+        ? recipe.description
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .toLowerCase()
+        : "";
+
+      const allIngredients = []; // Array to hold all ingredient names
+
+      if (recipe.ingredients) {
+        recipe.ingredients.forEach((ingredientObj) => {
+          const ingredientName = ingredientObj.ingredient
+            ? ingredientObj.ingredient
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .toLowerCase()
+            : "";
+
+          if (ingredientName && !allIngredients.includes(ingredientName)) {
+            allIngredients.push(ingredientName);
+          }
+        });
       }
 
-      if (
+      if (this.filteredRecipes.length === 0) {
+        this.$recipiesContainer.innerHTML = `Aucune recette ne contient "${searchTerm}".`;
+      }
+
+      return (
         recipeName.includes(lowerSearchTerm) ||
         recipeDescription.includes(lowerSearchTerm) ||
-        foundInIngredients
-      ) {
-        // Vérifiez si la recette n'est pas déjà dans le tableau filteredRecipes
-        if (!this.filteredRecipes.includes(recipe)) {
-          this.filteredRecipes.push(recipe);
-        }
-      }
-    }
-
-    if (this.filteredRecipes.length === 0) {
-      this.$recipiesContainer.innerHTML = `Aucune recette ne contient "${searchTerm}".`;
-    } else {
-      this.showRecipe(this.filteredRecipes);
-    }
+        allIngredients.includes(lowerSearchTerm)
+      );
+    });
   }
 
-  async updateFilteredRecipes() {
-    this.filteredRecipes = recipes.filter((recipe) => {
+  /**
+   * Updates the filtered recipes based on selected filter tags.
+   * @param {Array} searchRecipes - The list of recipes to filter.
+   */
+
+  async updateFilteredRecipes(searchRecipes) {
+    this.filteredRecipes = searchRecipes.filter((recipe) => {
       const ingredients = recipe.ingredients.map(
         (ingredient) => ingredient.ingredient
       );
@@ -208,46 +141,14 @@ class App {
     });
 
     this.$recipiesContainer.innerHTML = "";
-
-    // console.log(this.tagArraySearch);
-    // tag différent de vide alors filtre
-    if (this.tagArraySearch.length === 0) {
-      this.filteredLists(this._recipes);
-      this.showRecipe(this.recipesRenderAll);
-    } else {
-      this.recipesRender = this.filteredRecipes.map(
-        (recipe) => new Recipe(recipe)
-      );
-      this.filteredLists(this.filteredRecipes);
-      this.showRecipe(this.recipesRender);
-      // console.log(this.recipesRender);
-    }
-    const listItems = this.$selectContainer.querySelectorAll(".listItem");
-    listItems.forEach((listItem) => {
-      listItem.addEventListener(
-        "click",
-        this.handleListClick.bind(this, listItem)
-      );
-    });
+    this.filteredLists(this.filteredRecipes);
+    this.showRecipe(this.filteredRecipes);
   }
 
-  // filteredLists(filteredRecipes) {
-  //   const filteredIngredients = new DataFactory(filteredRecipes, "ingredient");
-  //   const filteredAppliances = new DataFactory(filteredRecipes, "appliance");
-  //   const filteredUstensils = new DataFactory(filteredRecipes, "ustensil");
-
-  //   // Mettre à jour les propriétés ingredientArray, applianceArray et ustensilArray avec les nouvelles valeurs filtrées
-  //   const ingredientArray = Array.from(filteredIngredients);
-  //   const applianceArray = Array.from(filteredAppliances);
-  //   const ustensilArray = Array.from(filteredUstensils);
-
-  //   // console.log(this.ingredientArray);
-
-  //   // Mettre à jour les listes d'affichage dans le DOM
-  //   this.$ingredientListContainer.innerHTML = this.renderList(ingredientArray);
-  //   this.$applianceListContainer.innerHTML = this.renderList(applianceArray);
-  //   this.$ustensilsListContainer.innerHTML = this.renderList(ustensilArray);
-  // }
+  /**
+   * Filters and displays lists of ingredients, appliances, and ustensils based on the selected recipes.
+   * @param {Array} filteredRecipes - The list of filtered recipes to extract data from.
+   */
 
   filteredLists(filteredRecipes) {
     const filteredIngredients = new Set();
@@ -294,14 +195,19 @@ class App {
     this.$applianceListContainer.innerHTML = this.renderList(applianceArray);
     this.$ustensilsListContainer.innerHTML = this.renderList(ustensilArray);
 
-    // const listItems = this.$selectContainer.querySelectorAll(".listItem");
-    // listItems.forEach((listItem) => {
-    //   listItem.addEventListener(
-    //     "click",
-    //     this.handleListClick.bind(this, listItem)
-    //   );
-    // });
+    const listItems = this.$selectContainer.querySelectorAll(".listItem");
+    listItems.forEach((listItem) => {
+      listItem.addEventListener(
+        "click",
+        this.handleListClick.bind(this, listItem)
+      );
+    });
   }
+
+  /**
+   * Renders and displays recipe cards in the specified container.
+   * @param {Array} data - The list of recipes to be displayed.
+   */
 
   showRecipe(data) {
     data.forEach((recipe) => {
@@ -311,6 +217,12 @@ class App {
     });
     this.$numRecipies.innerHTML = `${data.length} recettes`;
   }
+
+  /**
+   * Generates HTML content for a list of items.
+   * @param {Array} items - The list of items to be included in the generated HTML.
+   * @returns {string} - The HTML content representing the list.
+   */
 
   renderList(items) {
     return items
@@ -322,15 +234,12 @@ class App {
       .join("");
   }
 
+  /**
+   * The main function that initializes the application and sets up event listeners.
+   */
+
   async Main() {
-    this.showRecipe(this.recipesRenderAll);
-    console.log(this.recipesRenderAll);
-    // this.$numRecipies.innerHTML = `${this.recipesRenderAll.length} recettes`;
-
-    // Call Recipe Object
-
-    // Call factory pattern allows to change array source according to type
-
+    this.updateFilteredRecipes(this.recipesRenderAll);
     //show the ingredient list
     this.$ingredientListContainer.innerHTML = this.renderList(
       this.ingredientArray
@@ -369,12 +278,19 @@ class App {
         if (tagValue) {
           this.tagArraySearch.push(tagValue);
         }
-        this.updateFilteredRecipes();
+
+        this.updateFilteredRecipes(this.filteredRecipes);
 
         // console.log(this.tagArraySearch);
       });
     });
   }
+
+  /**
+   * Event handling method for clicking on list items.
+   * @param {Element} listItem - The clicked list item element.
+   * @param {Event} e - The click event object.
+   */
 
   // Méthode de gestion d'événements de clic pour les listes
   handleListClick(listItem, e) {
@@ -403,13 +319,20 @@ class App {
         if (index !== -1) {
           this.tagArraySearch.splice(index, 1);
         }
-
         e.target.closest(".tag-card").remove();
-        // console.log(this.tagArraySearch);
-        this.updateFilteredRecipes();
-        // console.log(this.filteredRecipes);
+        this.updateFilteredRecipes(this.filteredRecipes);
+        console.log(tagArraySearch);
+        if (this.tagArraySearch.length === 0) {
+          console.log("je suis la");
+          this.$recipiesContainer.innerHTML = "";
+          this.filteredLists(this.recipesRenderAll);
+          this.searchRecipes(searchTerm, this.recipesRenderAll);
+          this.showRecipe(this.filteredRecipes);
+        }
       }
     });
+
+    const searchTerm = this.searchInput.value.trim();
 
     return tagContainer.append(dom);
   }
