@@ -64,11 +64,15 @@ class App {
    */
 
   searchRecipes(searchTerm, filteredRecipes) {
-    this.filteredRecipes = filteredRecipes.filter((recipe) => {
-      const lowerSearchTerm = searchTerm
-        .toLowerCase()
-        .replace(/[\u0300-\u036f]/g, "")
-        .toLowerCase();
+    const lowerSearchTerm = searchTerm
+      .toLowerCase()
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase();
+
+    const matchingRecipes = [];
+
+    for (let i = 0; i < filteredRecipes.length; i++) {
+      const recipe = filteredRecipes[i];
 
       const recipeName = recipe.name
         ? recipe.name
@@ -84,10 +88,11 @@ class App {
             .toLowerCase()
         : "";
 
-      const allIngredients = []; // Array to hold all ingredient names
+      const allIngredients = [];
 
       if (recipe.ingredients) {
-        recipe.ingredients.forEach((ingredientObj) => {
+        for (let j = 0; j < recipe.ingredients.length; j++) {
+          const ingredientObj = recipe.ingredients[j];
           const ingredientName = ingredientObj.ingredient
             ? ingredientObj.ingredient
                 .normalize("NFD")
@@ -98,19 +103,23 @@ class App {
           if (ingredientName && !allIngredients.includes(ingredientName)) {
             allIngredients.push(ingredientName);
           }
-        });
+        }
       }
 
-      if (this.filteredRecipes.length === 0) {
-        this.$recipiesContainer.innerHTML = `Aucune recette ne contient "${searchTerm}".`;
-      }
-
-      return (
+      if (
         recipeName.includes(lowerSearchTerm) ||
         recipeDescription.includes(lowerSearchTerm) ||
         allIngredients.includes(lowerSearchTerm)
-      );
-    });
+      ) {
+        matchingRecipes.push(recipe);
+      }
+    }
+
+    this.filteredRecipes = matchingRecipes;
+
+    if (this.filteredRecipes.length === 0) {
+      this.$recipiesContainer.innerHTML = `Aucune recette ne contient "${searchTerm}".`;
+    }
   }
 
   /**
