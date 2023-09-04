@@ -41,11 +41,13 @@ class App {
   async handleSearchInput(event) {
     const searchTerm = await event.target.value.trim(); // Obtenir le terme de recherche sans espaces inutiles
 
-    if (searchTerm.length >= 3) {
+    if (searchTerm.length >= 3 || this.tagArraySearch.length !== 0) {
       this.$recipiesContainer.innerHTML = "";
       this.filteredLists(this.filteredRecipes);
+      this.updateFilteredRecipes(this.filteredRecipes);
       this.searchRecipes(searchTerm, this.filteredRecipes);
-      this.showRecipe(this.filteredRecipes);
+
+      // this.showRecipe(this.filteredRecipes);
 
       // return;
     } else {
@@ -281,7 +283,7 @@ class App {
 
         this.updateFilteredRecipes(this.filteredRecipes);
 
-        // console.log(this.tagArraySearch);
+        console.log(this.tagArraySearch);
       });
     });
   }
@@ -318,15 +320,22 @@ class App {
         const index = this.tagArraySearch.indexOf(tagText);
         if (index !== -1) {
           this.tagArraySearch.splice(index, 1);
+          console.log(this.tagArraySearch);
         }
         e.target.closest(".tag-card").remove();
-        this.updateFilteredRecipes(this.filteredRecipes);
-        console.log(tagArraySearch);
-        if (this.tagArraySearch.length === 0) {
-          console.log("je suis la");
+        console.log(this.tagArraySearch);
+        this.updateFilteredRecipes(this.recipesRenderAll);
+        if (this.tagArraySearch.length !== 0) {
+          this.$recipiesContainer.innerHTML = "";
+
+          console.log(this.filteredRecipes);
+
+          this.updateFilteredRecipes(this.filteredRecipes);
+          this.searchRecipes(searchTerm, this.filteredRecipes);
+        } else {
           this.$recipiesContainer.innerHTML = "";
           this.filteredLists(this.recipesRenderAll);
-          this.searchRecipes(searchTerm, this.recipesRenderAll);
+          this.searchRecipes(searchTerm, this.filteredRecipes);
           this.showRecipe(this.filteredRecipes);
         }
       }
