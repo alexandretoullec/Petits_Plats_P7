@@ -43,9 +43,10 @@ class App {
 
     if (searchTerm.length >= 3 || this.tagArraySearch.length !== 0) {
       this.$recipiesContainer.innerHTML = "";
-      this.filteredLists(this.filteredRecipes);
+
       this.updateFilteredRecipes(this.filteredRecipes);
       this.searchRecipes(searchTerm, this.filteredRecipes);
+      this.filteredLists(this.filteredRecipes);
 
       // this.showRecipe(this.filteredRecipes);
 
@@ -277,12 +278,14 @@ class App {
       tag.addEventListener("click", (e) => {
         const tagValue = e.target.textContent;
 
+        // this.updateFilteredRecipes(this.filteredRecipes);
+
         if (tagValue) {
           this.tagArraySearch.push(tagValue);
         }
 
         this.updateFilteredRecipes(this.filteredRecipes);
-
+        // this.searchRecipes(searchTerm, this.filteredRecipes);
         console.log(this.tagArraySearch);
       });
     });
@@ -315,6 +318,7 @@ class App {
     //remove card from dom and from tagArraySearch
     dom.querySelector(".tag-card__closeBtn").addEventListener("click", (e) => {
       const tagCard = e.target.closest(".tag-card");
+      const searchTerm = this.searchInput.value.trim();
       if (tagCard) {
         const tagText = tagCard.querySelector(".tag-card__text").textContent;
         const index = this.tagArraySearch.indexOf(tagText);
@@ -331,17 +335,16 @@ class App {
           console.log(this.filteredRecipes);
 
           this.updateFilteredRecipes(this.filteredRecipes);
-          this.searchRecipes(searchTerm, this.filteredRecipes);
+          // this.searchRecipes(searchTerm, this.filteredRecipes);
         } else {
           this.$recipiesContainer.innerHTML = "";
           this.filteredLists(this.recipesRenderAll);
-          this.searchRecipes(searchTerm, this.filteredRecipes);
+
+          // this.searchRecipes(searchTerm, this.filteredRecipes);
           this.showRecipe(this.filteredRecipes);
         }
       }
     });
-
-    const searchTerm = this.searchInput.value.trim();
 
     return tagContainer.append(dom);
   }
