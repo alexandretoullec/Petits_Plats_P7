@@ -22,6 +22,8 @@ class App {
     // Event listener for the search bar
     this.searchInput = document.querySelector(".form-control");
 
+    this.searchTerm = this.searchInput.value.trim();
+
     // ecouter l'événement input
     this.searchInput.addEventListener(
       "input",
@@ -41,18 +43,22 @@ class App {
   async handleSearchInput(event) {
     const searchTerm = await event.target.value.trim(); // Obtenir le terme de recherche sans espaces inutiles
 
-    if (searchTerm.length >= 3) {
+    if (searchTerm.length >= 3 || this.tagArraySearch.length !== 0) {
       this.$recipiesContainer.innerHTML = "";
-      this.filteredLists(this.filteredRecipes);
+
+      this.updateFilteredRecipes(this.filteredRecipes);
       this.searchRecipes(searchTerm, this.filteredRecipes);
-      this.showRecipe(this.filteredRecipes);
+      this.filteredLists(this.filteredRecipes);
+
+      // this.showRecipe(this.filteredRecipes);
 
       // return;
     } else {
       this.$recipiesContainer.innerHTML = "";
-      this.searchRecipes(searchTerm, this.recipesRenderAll);
+      this.updateFilteredRecipes(this.filteredRecipes);
+      // this.searchRecipes(searchTerm, this.recipesRenderAll);
       this.showRecipe(this.recipesRenderAll);
-
+      console.log("here!!");
       this.filteredLists(this.recipesRenderAll);
     }
   }
@@ -152,6 +158,8 @@ class App {
     this.$recipiesContainer.innerHTML = "";
     this.filteredLists(this.filteredRecipes);
     this.showRecipe(this.filteredRecipes);
+
+    this.searchRecipes(this.searchTerm, this.filteredRecipes);
   }
 
   /**
@@ -284,13 +292,16 @@ class App {
       tag.addEventListener("click", (e) => {
         const tagValue = e.target.textContent;
 
+        // this.updateFilteredRecipes(this.filteredRecipes);
+
         if (tagValue) {
           this.tagArraySearch.push(tagValue);
         }
 
         this.updateFilteredRecipes(this.filteredRecipes);
 
-        // console.log(this.tagArraySearch);
+        // this.searchRecipes(this.searchTerm, this.filteredRecipes);
+        console.log(this.tagArraySearch);
       });
     });
   }
@@ -322,26 +333,33 @@ class App {
     //remove card from dom and from tagArraySearch
     dom.querySelector(".tag-card__closeBtn").addEventListener("click", (e) => {
       const tagCard = e.target.closest(".tag-card");
+      const searchTerm = this.searchInput.value.trim();
       if (tagCard) {
         const tagText = tagCard.querySelector(".tag-card__text").textContent;
         const index = this.tagArraySearch.indexOf(tagText);
         if (index !== -1) {
           this.tagArraySearch.splice(index, 1);
+          console.log(this.tagArraySearch);
         }
         e.target.closest(".tag-card").remove();
-        this.updateFilteredRecipes(this.filteredRecipes);
-        console.log(tagArraySearch);
-        if (this.tagArraySearch.length === 0) {
-          console.log("je suis la");
+        console.log(this.tagArraySearch);
+        this.updateFilteredRecipes(this.recipesRenderAll);
+        if (this.tagArraySearch.length !== 0) {
+          this.$recipiesContainer.innerHTML = "";
+
+          console.log(this.filteredRecipes);
+
+          this.updateFilteredRecipes(this.filteredRecipes);
+          // this.searchRecipes(searchTerm, this.filteredRecipes);
+        } else {
           this.$recipiesContainer.innerHTML = "";
           this.filteredLists(this.recipesRenderAll);
-          this.searchRecipes(searchTerm, this.recipesRenderAll);
+
+          this.searchRecipes(searchTerm, this.filteredRecipes);
           this.showRecipe(this.filteredRecipes);
         }
       }
     });
-
-    const searchTerm = this.searchInput.value.trim();
 
     return tagContainer.append(dom);
   }

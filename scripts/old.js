@@ -100,3 +100,63 @@
 
 // Array.from(allUstensils).includes(lowerSearchTerm) ||
 // Array.from(allAppliance).includes(lowerSearchTerm)
+
+
+searchRecipes(searchTerm, filteredRecipes) {
+    const lowerSearchTerm = searchTerm
+      .toLowerCase()
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase();
+
+    const matchingRecipes = [];
+
+    for (let i = 0; i < filteredRecipes.length; i++) {
+      const recipe = filteredRecipes[i];
+
+      const recipeName = recipe.name
+        ? recipe.name
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .toLowerCase()
+        : "";
+
+      const recipeDescription = recipe.description
+        ? recipe.description
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .toLowerCase()
+        : "";
+
+      const allIngredients = [];
+
+      if (recipe.ingredients) {
+        for (let j = 0; j < recipe.ingredients.length; j++) {
+          const ingredientObj = recipe.ingredients[j];
+          const ingredientName = ingredientObj.ingredient
+            ? ingredientObj.ingredient
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .toLowerCase()
+            : "";
+
+          if (ingredientName && !allIngredients.includes(ingredientName)) {
+            allIngredients.push(ingredientName);
+          }
+        }
+      }
+
+      if (
+        recipeName.includes(lowerSearchTerm) ||
+        recipeDescription.includes(lowerSearchTerm) ||
+        allIngredients.includes(lowerSearchTerm)
+      ) {
+        matchingRecipes.push(recipe);
+      }
+    }
+
+    this.filteredRecipes = matchingRecipes;
+
+    if (this.filteredRecipes.length === 0) {
+      this.$recipiesContainer.innerHTML = `Aucune recette ne contient "${searchTerm}".`;
+    }
+  }
