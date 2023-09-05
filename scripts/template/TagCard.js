@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 class TagCard {
   constructor() {
     this._$tagContainer = document.querySelector(".tag-container");
@@ -21,6 +22,7 @@ class TagCard {
 
   closeTag(e) {
     e.preventDefault();
+    // eslint-disable-next-line no-undef
     dom.style.display = "none";
   }
 }

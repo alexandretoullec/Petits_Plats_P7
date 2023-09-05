@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+/* eslint-disable no-unused-vars */
 // send back the good formating type according to type datas
 
 class DataFactory {

@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 class App {
   constructor() {
     // Selecting DOM elements
@@ -41,24 +42,28 @@ class App {
    * @param {Event} event - The event object representing the input event.
    */
   async handleSearchInput(event) {
-    const searchTerm = await event.target.value.trim(); // Obtenir le terme de recherche sans espaces inutiles
+    const searchTerm = event.target.value.trim(); // Obtenir le terme de recherche sans espaces inutiles
 
     if (searchTerm.length >= 3 || this.tagArraySearch.length !== 0) {
       this.$recipiesContainer.innerHTML = "";
+      // console.log("here!!");
+      // console.log(this.filteredRecipes);
 
       this.updateFilteredRecipes(this.filteredRecipes);
       this.searchRecipes(searchTerm, this.filteredRecipes);
+      this.showRecipe(this.filteredRecipes);
       this.filteredLists(this.filteredRecipes);
 
       // this.showRecipe(this.filteredRecipes);
 
       // return;
-    } else {
+    } else if (searchTerm.length < 3) {
       this.$recipiesContainer.innerHTML = "";
-      this.updateFilteredRecipes(this.filteredRecipes);
+
+      this.updateFilteredRecipes(this.recipesRenderAll);
       // this.searchRecipes(searchTerm, this.recipesRenderAll);
       this.showRecipe(this.recipesRenderAll);
-      console.log("here!!");
+
       this.filteredLists(this.recipesRenderAll);
     }
   }
@@ -107,9 +112,9 @@ class App {
         });
       }
 
-      if (this.filteredRecipes.length === 0) {
-        this.$recipiesContainer.innerHTML = `Aucune recette ne contient "${searchTerm}".`;
-      }
+      // if (this.filteredRecipes.length === 0) {
+      //   this.$recipiesContainer.innerHTML = `Aucune recette ne contient "${searchTerm}".`;
+      // }
 
       return (
         recipeName.includes(lowerSearchTerm) ||
@@ -218,12 +223,19 @@ class App {
    */
 
   showRecipe(data) {
+    this.$recipiesContainer.innerHTML = "";
+    const searchTerm = this.searchInput.value.trim();
     data.forEach((recipe) => {
       const templateCard = new recipeCard(recipe);
 
       this.$recipiesContainer.appendChild(templateCard.createrecipeCard());
     });
     this.$numRecipies.innerHTML = `${data.length} recettes`;
+
+    if (data.length === 0) {
+      this.$recipiesContainer.innerHTML = `Aucune recette ne contient "${searchTerm}" vous pouvez chercher «
+      tarte aux pommes », « poisson », etc.`;
+    }
   }
 
   /**
