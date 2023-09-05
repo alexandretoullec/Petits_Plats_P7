@@ -72,7 +72,7 @@ class App {
   searchRecipes(searchTerm, filteredRecipes) {
     this.filteredRecipes = filteredRecipes.filter((recipe) => {
       const lowerSearchTerm = searchTerm
-        .toLowerCase()
+        .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "")
         .toLowerCase();
 
