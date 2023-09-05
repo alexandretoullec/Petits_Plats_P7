@@ -22,6 +22,8 @@ class App {
     // Event listener for the search bar
     this.searchInput = document.querySelector(".form-control");
 
+    this.searchTerm = this.searchInput.value.trim();
+
     // ecouter l'événement input
     this.searchInput.addEventListener(
       "input",
@@ -53,9 +55,10 @@ class App {
       // return;
     } else {
       this.$recipiesContainer.innerHTML = "";
-      this.searchRecipes(searchTerm, this.recipesRenderAll);
+      this.updateFilteredRecipes(this.filteredRecipes);
+      // this.searchRecipes(searchTerm, this.recipesRenderAll);
       this.showRecipe(this.recipesRenderAll);
-
+      console.log("here!!");
       this.filteredLists(this.recipesRenderAll);
     }
   }
@@ -146,6 +149,8 @@ class App {
     this.$recipiesContainer.innerHTML = "";
     this.filteredLists(this.filteredRecipes);
     this.showRecipe(this.filteredRecipes);
+
+    this.searchRecipes(this.searchTerm, this.filteredRecipes);
   }
 
   /**
@@ -285,7 +290,8 @@ class App {
         }
 
         this.updateFilteredRecipes(this.filteredRecipes);
-        // this.searchRecipes(searchTerm, this.filteredRecipes);
+
+        // this.searchRecipes(this.searchTerm, this.filteredRecipes);
         console.log(this.tagArraySearch);
       });
     });
@@ -340,7 +346,7 @@ class App {
           this.$recipiesContainer.innerHTML = "";
           this.filteredLists(this.recipesRenderAll);
 
-          // this.searchRecipes(searchTerm, this.filteredRecipes);
+          this.searchRecipes(searchTerm, this.filteredRecipes);
           this.showRecipe(this.filteredRecipes);
         }
       }
