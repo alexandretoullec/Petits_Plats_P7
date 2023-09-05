@@ -5,13 +5,13 @@
   color: white;
   height: 30rem;
   width: 100%;
-  background: url("../assets/header_photo.png") no-repeat;
+  background: url(../assets/header_photo.png) no-repeat;
   background-size: cover;
 }
 .header__logo {
   height: 1.5rem;
   width: auto;
-  background: url("../assets/Header_Logo.png") no-repeat;
+  background: url(../assets/Header_Logo.png) no-repeat;
   background-size: contain;
 }
 .header__search-container {
@@ -39,7 +39,7 @@
 .header__search-container__form span {
   padding-right: 3rem;
   cursor: pointer;
-  background: url("../../assets/search-logo.svg") center center/80% 80% no-repeat white;
+  background: url(../assets/search-logo.svg) center center/80% 80% no-repeat white;
   border: none;
 }
 
@@ -238,6 +238,10 @@ body {
 .tag-card__closeBtn {
   background-color: transparent;
   border: none;
+}
+
+.tag-card__fadeOut {
+  opacity: 0;
 }
 
 /*# sourceMappingURL=style.css.map */
