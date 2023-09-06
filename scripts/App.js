@@ -48,11 +48,11 @@ class App {
       this.$recipiesContainer.innerHTML = "";
       // console.log("here!!");
       // console.log(this.filteredRecipes);
-
-      this.updateFilteredRecipes(this.filteredRecipes);
       this.searchRecipes(searchTerm, this.filteredRecipes);
-      this.showRecipe(this.filteredRecipes);
+      this.updateFilteredRecipes(this.filteredRecipes);
       this.filteredLists(this.filteredRecipes);
+      this.showRecipe(this.filteredRecipes);
+      // this.filteredLists(this.filteredRecipes);
 
       // this.showRecipe(this.filteredRecipes);
 
@@ -151,11 +151,11 @@ class App {
       );
     });
 
-    this.$recipiesContainer.innerHTML = "";
-    this.filteredLists(this.filteredRecipes);
-    this.showRecipe(this.filteredRecipes);
+    // this.$recipiesContainer.innerHTML = "";
+    // this.filteredLists(this.filteredRecipes);
+    // this.showRecipe(this.filteredRecipes);
 
-    this.searchRecipes(this.searchTerm, this.filteredRecipes);
+    // this.searchRecipes(this.searchTerm, this.filteredRecipes);
   }
 
   /**
@@ -260,6 +260,8 @@ class App {
 
   async Main() {
     this.updateFilteredRecipes(this.recipesRenderAll);
+    this.showRecipe(this.recipesRenderAll);
+    this.filteredLists(this.recipesRenderAll);
     //show the ingredient list
     this.$ingredientListContainer.innerHTML = this.renderList(
       this.ingredientArray
@@ -302,6 +304,8 @@ class App {
         }
 
         this.updateFilteredRecipes(this.filteredRecipes);
+        this.showRecipe(this.filteredRecipes);
+        this.filteredLists(this.filteredRecipes);
 
         // this.searchRecipes(this.searchTerm, this.filteredRecipes);
         console.log(this.tagArraySearch);
@@ -342,17 +346,21 @@ class App {
         const index = this.tagArraySearch.indexOf(tagText);
         if (index !== -1) {
           this.tagArraySearch.splice(index, 1);
-          console.log(this.tagArraySearch);
+          // console.log(this.tagArraySearch);
         }
         e.target.closest(".tag-card").remove();
-        console.log(this.tagArraySearch);
+        // console.log(this.tagArraySearch);
         this.updateFilteredRecipes(this.recipesRenderAll);
+
         if (this.tagArraySearch.length !== 0) {
           this.$recipiesContainer.innerHTML = "";
 
           console.log(this.filteredRecipes);
 
           this.updateFilteredRecipes(this.filteredRecipes);
+          this.showRecipe(this.filteredRecipes);
+          this.filteredLists(this.filteredRecipes);
+
           // this.searchRecipes(searchTerm, this.filteredRecipes);
         } else {
           this.$recipiesContainer.innerHTML = "";
