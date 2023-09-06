@@ -46,24 +46,14 @@ class App {
 
     if (searchTerm.length >= 3 || this.tagArraySearch.length !== 0) {
       this.$recipiesContainer.innerHTML = "";
-      // console.log("here!!");
-      // console.log(this.filteredRecipes);
       this.searchRecipes(searchTerm, this.filteredRecipes);
       this.updateFilteredRecipes(this.filteredRecipes);
       this.filteredLists(this.filteredRecipes);
       this.showRecipe(this.filteredRecipes);
-      // this.filteredLists(this.filteredRecipes);
-
-      // this.showRecipe(this.filteredRecipes);
-
-      // return;
-    } else if (searchTerm.length < 3) {
+    } else {
       this.$recipiesContainer.innerHTML = "";
-
       this.updateFilteredRecipes(this.recipesRenderAll);
-      // this.searchRecipes(searchTerm, this.recipesRenderAll);
       this.showRecipe(this.recipesRenderAll);
-
       this.filteredLists(this.recipesRenderAll);
     }
   }
@@ -112,10 +102,6 @@ class App {
         });
       }
 
-      // if (this.filteredRecipes.length === 0) {
-      //   this.$recipiesContainer.innerHTML = `Aucune recette ne contient "${searchTerm}".`;
-      // }
-
       return (
         recipeName.includes(lowerSearchTerm) ||
         recipeDescription.includes(lowerSearchTerm) ||
@@ -136,9 +122,7 @@ class App {
       );
       const appliances = [recipe.appliance];
       const ustensils = recipe.ustensils;
-
       const filterList = [...ingredients, ...appliances, ...ustensils];
-
       const lowercaseFilterList = filterList.map((item) =>
         item
           .normalize("NFD")
@@ -150,12 +134,6 @@ class App {
         lowercaseFilterList.includes(tag)
       );
     });
-
-    // this.$recipiesContainer.innerHTML = "";
-    // this.filteredLists(this.filteredRecipes);
-    // this.showRecipe(this.filteredRecipes);
-
-    // this.searchRecipes(this.searchTerm, this.filteredRecipes);
   }
 
   /**
@@ -247,7 +225,6 @@ class App {
   renderList(items) {
     return items
       .map((item) => {
-        // console.log(ingredient);
         const template = new MenuCard(item).createListCard();
         return template;
       })
@@ -262,11 +239,11 @@ class App {
     this.updateFilteredRecipes(this.recipesRenderAll);
     this.showRecipe(this.recipesRenderAll);
     this.filteredLists(this.recipesRenderAll);
+
     //show the ingredient list
     this.$ingredientListContainer.innerHTML = this.renderList(
       this.ingredientArray
     );
-
     // show the appliance list
 
     this.$applianceListContainer.innerHTML = this.renderList(
@@ -287,28 +264,17 @@ class App {
       );
     });
 
-    /**********************************************
-     *
-     *
-     *   */
-
     // add event qui ajoute dans le tableau tag l'élément cliqué
     document.querySelectorAll(".dropdown-content").forEach((tag) => {
       tag.addEventListener("click", (e) => {
         const tagValue = e.target.textContent;
 
-        // this.updateFilteredRecipes(this.filteredRecipes);
-
         if (tagValue) {
           this.tagArraySearch.push(tagValue);
         }
-
         this.updateFilteredRecipes(this.filteredRecipes);
         this.showRecipe(this.filteredRecipes);
         this.filteredLists(this.filteredRecipes);
-
-        // this.searchRecipes(this.searchTerm, this.filteredRecipes);
-        console.log(this.tagArraySearch);
       });
     });
   }
@@ -319,14 +285,10 @@ class App {
    * @param {Event} e - The click event object.
    */
 
-  // Méthode de gestion d'événements de clic pour les listes
+  // click event method for lists
   handleListClick(listItem, e) {
     e.preventDefault();
-
-    // const listName = listItem.textContent;
     const tagContainer = document.querySelector(".tag-container");
-    // console.log("Appliance cliquée :", listName);
-
     const dom = document.createElement("div");
     dom.classList.add("tag-card");
     //create tag
@@ -346,17 +308,12 @@ class App {
         const index = this.tagArraySearch.indexOf(tagText);
         if (index !== -1) {
           this.tagArraySearch.splice(index, 1);
-          // console.log(this.tagArraySearch);
         }
         e.target.closest(".tag-card").remove();
-        // console.log(this.tagArraySearch);
         this.updateFilteredRecipes(this.recipesRenderAll);
 
         if (this.tagArraySearch.length !== 0) {
           this.$recipiesContainer.innerHTML = "";
-
-          console.log(this.filteredRecipes);
-
           this.updateFilteredRecipes(this.filteredRecipes);
           this.showRecipe(this.filteredRecipes);
           this.filteredLists(this.filteredRecipes);
