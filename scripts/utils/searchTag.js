@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+/* eslint-disable no-unused-vars */
 //initialisation du tableau de tags
 const tagArraySearch = [];
 

@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 class App {
   constructor() {
     // Selecting DOM elements
@@ -41,24 +42,18 @@ class App {
    * @param {Event} event - The event object representing the input event.
    */
   async handleSearchInput(event) {
-    const searchTerm = await event.target.value.trim(); // Obtenir le terme de recherche sans espaces inutiles
+    const searchTerm = event.target.value.trim(); // Obtenir le terme de recherche sans espaces inutiles
 
     if (searchTerm.length >= 3 || this.tagArraySearch.length !== 0) {
       this.$recipiesContainer.innerHTML = "";
-
-      this.updateFilteredRecipes(this.filteredRecipes);
       this.searchRecipes(searchTerm, this.filteredRecipes);
+      this.updateFilteredRecipes(this.filteredRecipes);
       this.filteredLists(this.filteredRecipes);
-
-      // this.showRecipe(this.filteredRecipes);
-
-      // return;
+      this.showRecipe(this.filteredRecipes);
     } else {
       this.$recipiesContainer.innerHTML = "";
-      this.updateFilteredRecipes(this.filteredRecipes);
-      // this.searchRecipes(searchTerm, this.recipesRenderAll);
+      this.updateFilteredRecipes(this.recipesRenderAll);
       this.showRecipe(this.recipesRenderAll);
-      console.log("here!!");
       this.filteredLists(this.recipesRenderAll);
     }
   }
@@ -72,7 +67,7 @@ class App {
   searchRecipes(searchTerm, filteredRecipes) {
     this.filteredRecipes = filteredRecipes.filter((recipe) => {
       const lowerSearchTerm = searchTerm
-        .toLowerCase()
+        .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "")
         .toLowerCase();
 
@@ -107,10 +102,6 @@ class App {
         });
       }
 
-      if (this.filteredRecipes.length === 0) {
-        this.$recipiesContainer.innerHTML = `Aucune recette ne contient "${searchTerm}".`;
-      }
-
       return (
         recipeName.includes(lowerSearchTerm) ||
         recipeDescription.includes(lowerSearchTerm) ||
@@ -131,9 +122,7 @@ class App {
       );
       const appliances = [recipe.appliance];
       const ustensils = recipe.ustensils;
-
       const filterList = [...ingredients, ...appliances, ...ustensils];
-
       const lowercaseFilterList = filterList.map((item) =>
         item
           .normalize("NFD")
@@ -145,12 +134,6 @@ class App {
         lowercaseFilterList.includes(tag)
       );
     });
-
-    this.$recipiesContainer.innerHTML = "";
-    this.filteredLists(this.filteredRecipes);
-    this.showRecipe(this.filteredRecipes);
-
-    this.searchRecipes(this.searchTerm, this.filteredRecipes);
   }
 
   /**
@@ -218,12 +201,19 @@ class App {
    */
 
   showRecipe(data) {
+    this.$recipiesContainer.innerHTML = "";
+    const searchTerm = this.searchInput.value.trim();
     data.forEach((recipe) => {
       const templateCard = new recipeCard(recipe);
 
       this.$recipiesContainer.appendChild(templateCard.createrecipeCard());
     });
     this.$numRecipies.innerHTML = `${data.length} recettes`;
+
+    if (data.length === 0) {
+      this.$recipiesContainer.innerHTML = `Aucune recette ne contient "${searchTerm}" vous pouvez chercher «
+      tarte aux pommes », « poisson », etc.`;
+    }
   }
 
   /**
@@ -235,7 +225,6 @@ class App {
   renderList(items) {
     return items
       .map((item) => {
-        // console.log(ingredient);
         const template = new MenuCard(item).createListCard();
         return template;
       })
@@ -248,11 +237,13 @@ class App {
 
   async Main() {
     this.updateFilteredRecipes(this.recipesRenderAll);
+    this.showRecipe(this.recipesRenderAll);
+    this.filteredLists(this.recipesRenderAll);
+
     //show the ingredient list
     this.$ingredientListContainer.innerHTML = this.renderList(
       this.ingredientArray
     );
-
     // show the appliance list
 
     this.$applianceListContainer.innerHTML = this.renderList(
@@ -273,26 +264,17 @@ class App {
       );
     });
 
-    /**********************************************
-     *
-     *
-     *   */
-
     // add event qui ajoute dans le tableau tag l'élément cliqué
     document.querySelectorAll(".dropdown-content").forEach((tag) => {
       tag.addEventListener("click", (e) => {
         const tagValue = e.target.textContent;
 
-        // this.updateFilteredRecipes(this.filteredRecipes);
-
         if (tagValue) {
           this.tagArraySearch.push(tagValue);
         }
-
         this.updateFilteredRecipes(this.filteredRecipes);
-
-        // this.searchRecipes(this.searchTerm, this.filteredRecipes);
-        console.log(this.tagArraySearch);
+        this.showRecipe(this.filteredRecipes);
+        this.filteredLists(this.filteredRecipes);
       });
     });
   }
@@ -303,14 +285,10 @@ class App {
    * @param {Event} e - The click event object.
    */
 
-  // Méthode de gestion d'événements de clic pour les listes
+  // click event method for lists
   handleListClick(listItem, e) {
     e.preventDefault();
-
-    // const listName = listItem.textContent;
     const tagContainer = document.querySelector(".tag-container");
-    // console.log("Appliance cliquée :", listName);
-
     const dom = document.createElement("div");
     dom.classList.add("tag-card");
     //create tag
@@ -330,17 +308,16 @@ class App {
         const index = this.tagArraySearch.indexOf(tagText);
         if (index !== -1) {
           this.tagArraySearch.splice(index, 1);
-          console.log(this.tagArraySearch);
         }
         e.target.closest(".tag-card").remove();
-        console.log(this.tagArraySearch);
         this.updateFilteredRecipes(this.recipesRenderAll);
+
         if (this.tagArraySearch.length !== 0) {
           this.$recipiesContainer.innerHTML = "";
-
-          console.log(this.filteredRecipes);
-
           this.updateFilteredRecipes(this.filteredRecipes);
+          this.showRecipe(this.filteredRecipes);
+          this.filteredLists(this.filteredRecipes);
+
           // this.searchRecipes(searchTerm, this.filteredRecipes);
         } else {
           this.$recipiesContainer.innerHTML = "";

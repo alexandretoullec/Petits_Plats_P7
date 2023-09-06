@@ -1,8 +1,4 @@
 @use "../utils/typo_var.scss" as var;
-main {
-  // background: var.$light-grey;
-  // height: 50vh;
-}
 
 .selec {
   padding: 5rem 0;
@@ -10,11 +6,30 @@ main {
   width: 80%;
   margin: auto;
 
+  @media (max-width: var.$layout-breakpoint-small) {
+    width: 100%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
   &__options {
     width: 50%;
     display: flex;
     justify-content: space-between;
     flex-direction: row;
+    @media (max-width: var.$layout-breakpoint-small) {
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      margin: auto;
+      padding: 0;
+    }
+  }
+  .dropdown {
+    @media (max-width: var.$layout-breakpoint-small) {
+      margin-bottom: 2rem;
+    }
   }
   &__num-recipies {
     font-family: var.$ff-anton;
@@ -26,6 +41,9 @@ main {
     display: flex;
     align-items: center;
     justify-content: flex-end;
+    @media (max-width: var.$layout-breakpoint-small) {
+      justify-content: center;
+    }
   }
 }
 
@@ -35,4 +53,7 @@ main {
   gap: 2.5rem;
   width: 80%;
   margin: auto;
+  @media (max-width: var.$layout-breakpoint-small) {
+    grid-template-columns: 1fr;
+  }
 }
