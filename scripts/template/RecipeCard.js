@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 class recipeCard {
   constructor(recipe) {
     this._recipe = recipe;
