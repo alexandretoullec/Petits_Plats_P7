@@ -217,6 +217,59 @@ class App {
   }
 
   /**
+   * Event handling method for clicking on list items.
+   * @param {Element} listItem - The clicked list item element.
+   * @param {Event} e - The click event object.
+   */
+
+  // click event method for lists
+  handleListClick(listItem, e) {
+    e.preventDefault();
+    const tagContainer = document.querySelector(".tag-container");
+    const dom = document.createElement("div");
+    dom.classList.add("tag-card");
+    //create tag
+    dom.innerHTML = `        
+            <div class="tag-card__text">${listItem.textContent}</div>
+            <button class="tag-card__closeBtn">
+                <i class="fa-solid fa-xmark"></i>
+            </button>      
+        `;
+
+    //remove card from dom and from tagArraySearch
+    dom.querySelector(".tag-card__closeBtn").addEventListener("click", (e) => {
+      const tagCard = e.target.closest(".tag-card");
+      const searchTerm = this.searchInput.value.trim();
+      if (tagCard) {
+        const tagText = tagCard.querySelector(".tag-card__text").textContent;
+        const index = this.tagArraySearch.indexOf(tagText);
+        if (index !== -1) {
+          this.tagArraySearch.splice(index, 1);
+        }
+        e.target.closest(".tag-card").remove();
+        this.updateFilteredRecipes(this.recipesRenderAll);
+
+        if (this.tagArraySearch.length !== 0) {
+          this.$recipiesContainer.innerHTML = "";
+          this.updateFilteredRecipes(this.filteredRecipes);
+          this.showRecipe(this.filteredRecipes);
+          this.filteredLists(this.filteredRecipes);
+
+          // this.searchRecipes(searchTerm, this.filteredRecipes);
+        } else {
+          this.$recipiesContainer.innerHTML = "";
+          this.filteredLists(this.recipesRenderAll);
+
+          this.searchRecipes(searchTerm, this.filteredRecipes);
+          this.showRecipe(this.filteredRecipes);
+        }
+      }
+    });
+
+    return tagContainer.append(dom);
+  }
+
+  /**
    * Generates HTML content for a list of items.
    * @param {Array} items - The list of items to be included in the generated HTML.
    * @returns {string} - The HTML content representing the list.
@@ -277,59 +330,6 @@ class App {
         this.filteredLists(this.filteredRecipes);
       });
     });
-  }
-
-  /**
-   * Event handling method for clicking on list items.
-   * @param {Element} listItem - The clicked list item element.
-   * @param {Event} e - The click event object.
-   */
-
-  // click event method for lists
-  handleListClick(listItem, e) {
-    e.preventDefault();
-    const tagContainer = document.querySelector(".tag-container");
-    const dom = document.createElement("div");
-    dom.classList.add("tag-card");
-    //create tag
-    dom.innerHTML = `        
-            <div class="tag-card__text">${listItem.textContent}</div>
-            <button class="tag-card__closeBtn">
-                <i class="fa-solid fa-xmark"></i>
-            </button>      
-        `;
-
-    //remove card from dom and from tagArraySearch
-    dom.querySelector(".tag-card__closeBtn").addEventListener("click", (e) => {
-      const tagCard = e.target.closest(".tag-card");
-      const searchTerm = this.searchInput.value.trim();
-      if (tagCard) {
-        const tagText = tagCard.querySelector(".tag-card__text").textContent;
-        const index = this.tagArraySearch.indexOf(tagText);
-        if (index !== -1) {
-          this.tagArraySearch.splice(index, 1);
-        }
-        e.target.closest(".tag-card").remove();
-        this.updateFilteredRecipes(this.recipesRenderAll);
-
-        if (this.tagArraySearch.length !== 0) {
-          this.$recipiesContainer.innerHTML = "";
-          this.updateFilteredRecipes(this.filteredRecipes);
-          this.showRecipe(this.filteredRecipes);
-          this.filteredLists(this.filteredRecipes);
-
-          // this.searchRecipes(searchTerm, this.filteredRecipes);
-        } else {
-          this.$recipiesContainer.innerHTML = "";
-          this.filteredLists(this.recipesRenderAll);
-
-          this.searchRecipes(searchTerm, this.filteredRecipes);
-          this.showRecipe(this.filteredRecipes);
-        }
-      }
-    });
-
-    return tagContainer.append(dom);
   }
 }
 
