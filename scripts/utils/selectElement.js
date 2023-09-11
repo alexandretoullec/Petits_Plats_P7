@@ -1,4 +1,4 @@
-// mange lists
+// manage lists
 document.querySelectorAll(".dropbtn").forEach((dropbtn) => {
   dropbtn.addEventListener("click", () => {
     const dropdownContent = dropbtn.nextElementSibling;
@@ -9,6 +9,8 @@ document.querySelectorAll(".dropbtn").forEach((dropbtn) => {
       dropdownContent.style.display === "block"
         ? "rotate(180deg)"
         : "rotate(0)";
+
+    document.querySelector(".search-input").value = "";
   });
 });
 
