@@ -43,8 +43,14 @@ class App {
    */
   async handleSearchInput(event) {
     const searchTerm = event.target.value.trim(); // Obtenir le terme de recherche sans espaces inutiles
-
-    if (searchTerm.length >= 3 || this.tagArraySearch.length !== 0) {
+    if (this.tagArraySearch.length !== 0 && searchTerm.length < 3) {
+      console.log("here");
+      this.filteredRecipes = this.recipesRenderAll;
+      this.updateFilteredRecipes(this.filteredRecipes);
+      this.filteredLists(this.filteredRecipes);
+      this.showRecipe(this.filteredRecipes);
+    } else if (searchTerm.length >= 3) {
+      this.filteredRecipes = this.recipesRenderAll;
       this.$recipiesContainer.innerHTML = "";
       this.searchRecipes(searchTerm, this.filteredRecipes);
       this.updateFilteredRecipes(this.filteredRecipes);
@@ -258,9 +264,8 @@ class App {
           // this.searchRecipes(searchTerm, this.filteredRecipes);
         } else {
           this.$recipiesContainer.innerHTML = "";
-          this.filteredLists(this.recipesRenderAll);
-
           this.searchRecipes(searchTerm, this.filteredRecipes);
+          this.filteredLists(this.filteredRecipes);
           this.showRecipe(this.filteredRecipes);
         }
       }
