@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 /**
- * @param {Array} datas
+ * @param {Array} datas from recipes .js
  */
 
 class Recipe {
