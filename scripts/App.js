@@ -232,46 +232,56 @@ class App {
   handleListClick(listItem, e) {
     e.preventDefault();
     const tagContainer = document.querySelector(".tag-container");
+    const tagText = listItem.textContent.trim();
+    console.log(this.tagArraySearch);
+    console.log(tagText);
+
     const dom = document.createElement("div");
-    dom.classList.add("tag-card");
-    //create tag
-    dom.innerHTML = `        
+    if (!this.tagArraySearch.includes(tagText)) {
+      dom.classList.add("tag-card");
+      //create tag
+      dom.innerHTML = `        
             <div class="tag-card__text">${listItem.textContent}</div>
             <button class="tag-card__closeBtn">
                 <i class="fa-solid fa-xmark"></i>
             </button>      
         `;
 
-    //remove card from dom and from tagArraySearch
-    dom.querySelector(".tag-card__closeBtn").addEventListener("click", (e) => {
-      const tagCard = e.target.closest(".tag-card");
-      const searchTerm = this.searchInput.value.trim();
-      if (tagCard) {
-        const tagText = tagCard.querySelector(".tag-card__text").textContent;
-        const index = this.tagArraySearch.indexOf(tagText);
-        if (index !== -1) {
-          this.tagArraySearch.splice(index, 1);
-        }
-        e.target.closest(".tag-card").remove();
-        this.updateFilteredRecipes(this.recipesRenderAll);
+      tagContainer.append(dom);
 
-        if (this.tagArraySearch.length !== 0) {
-          this.$recipiesContainer.innerHTML = "";
-          this.updateFilteredRecipes(this.filteredRecipes);
-          this.showRecipe(this.filteredRecipes);
-          this.filteredLists(this.filteredRecipes);
+      //remove card from dom and from tagArraySearch
+      dom
+        .querySelector(".tag-card__closeBtn")
+        .addEventListener("click", (e) => {
+          const tagCard = e.target.closest(".tag-card");
+          const searchTerm = this.searchInput.value.trim();
+          if (tagCard) {
+            const tagText =
+              tagCard.querySelector(".tag-card__text").textContent;
+            const index = this.tagArraySearch.indexOf(tagText);
+            if (index !== -1) {
+              this.tagArraySearch.splice(index, 1);
+            }
+            e.target.closest(".tag-card").remove();
+            this.updateFilteredRecipes(this.recipesRenderAll);
 
-          // this.searchRecipes(searchTerm, this.filteredRecipes);
-        } else {
-          this.$recipiesContainer.innerHTML = "";
-          this.searchRecipes(searchTerm, this.filteredRecipes);
-          this.filteredLists(this.filteredRecipes);
-          this.showRecipe(this.filteredRecipes);
-        }
-      }
-    });
+            if (this.tagArraySearch.length !== 0) {
+              this.$recipiesContainer.innerHTML = "";
+              this.updateFilteredRecipes(this.filteredRecipes);
+              this.showRecipe(this.filteredRecipes);
+              this.filteredLists(this.filteredRecipes);
 
-    return tagContainer.append(dom);
+              // this.searchRecipes(searchTerm, this.filteredRecipes);
+            } else {
+              this.$recipiesContainer.innerHTML = "";
+              this.searchRecipes(searchTerm, this.filteredRecipes);
+              this.filteredLists(this.filteredRecipes);
+              this.showRecipe(this.filteredRecipes);
+            }
+          }
+        });
+    }
+    // return tagContainer.append(dom);
   }
 
   /**
@@ -322,12 +332,12 @@ class App {
       );
     });
 
-    // add event qui ajoute dans le tableau tag l'élément cliqué
+    // add event qui ajoute dans le container tag l'élément cliqué
     document.querySelectorAll(".dropdown-content").forEach((tag) => {
       tag.addEventListener("click", (e) => {
         const tagValue = e.target.textContent;
 
-        if (tagValue) {
+        if (tagValue && !this.tagArraySearch.includes(tagValue)) {
           this.tagArraySearch.push(tagValue);
         }
         this.updateFilteredRecipes(this.filteredRecipes);
