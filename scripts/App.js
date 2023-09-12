@@ -233,8 +233,6 @@ class App {
     e.preventDefault();
     const tagContainer = document.querySelector(".tag-container");
     const tagText = listItem.textContent.trim();
-    console.log(this.tagArraySearch);
-    console.log(tagText);
 
     const dom = document.createElement("div");
     if (!this.tagArraySearch.includes(tagText)) {
